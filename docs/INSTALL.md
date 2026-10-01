@@ -6,7 +6,7 @@ macOS 14 or later, an Intel or Apple Silicon Mac, an administrator account, an X
 
 ## Unsigned first release
 
-Version 0.1.0 has an **unsigned Installer package** and **ad-hoc-signed executables**. Ad-hoc signatures verify code integrity; they do not identify a developer to Apple. This release is not notarized. macOS may ask you to approve both the downloaded installer and the app.
+Version 0.2.0 has an **unsigned Installer package** and **ad-hoc-signed executables**. Ad-hoc signatures verify code integrity; they do not identify a developer to Apple. This release is not notarized. macOS may ask you to approve both the downloaded installer and the app.
 
 Download only from [this repository's Releases](https://github.com/ismoil-nosr/xprinter-macos/releases). If macOS blocks opening the package, attempt to open it once, then use **System Settings → Privacy & Security → Open Anyway** for that package, authenticate, and open it again. If the app is separately blocked, approve that specific app the same way. Do not disable Gatekeeper, SIP or other system protections. Apple's [instructions for opening an app from an unidentified developer](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) describe the approval process.
 
@@ -22,6 +22,10 @@ The release includes SHA-256 checksums. You can compare a downloaded package wit
 6. Print one label. Check that all content stays on one label and scan its barcode or QR before printing a batch.
 
 The installer leaves your current default printer and existing vendor queues intact. This project's queue is named `XP330B_OpenSource` and appears as **Xprinter XP-330B Labels (Open Source)**.
+
+## Language
+
+The app's top-right menu offers **English**, **Русский**, **简体中文**, and **System default**. Selection takes effect immediately and persists across launches without changing your label content or printer settings. Installer welcome/conclusion pages follow the system language. See the [Russian](README.ru.md) and [Chinese](README.zh-CN.md) guides for translated setup instructions, and [TRANSLATING.md](TRANSLATING.md) to contribute a correction.
 
 ## Printing from Chrome / marketplaces
 

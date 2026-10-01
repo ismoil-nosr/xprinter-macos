@@ -1,0 +1,4 @@
+title,code,footer,type,quantity
+商品示例,12345678,¥25,code128,1
+中文二维码,中文测试-123,请扫描,qr,1
+文字标签,欢迎使用 Open Xprinter,,text,1

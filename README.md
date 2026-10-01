@@ -4,23 +4,26 @@
 
 A native USB label driver and printing app for **Xprinter XP-330B**, with an offline installer for **macOS 14+ on Apple Silicon and Intel**.
 
-[Download the installer](https://github.com/ismoil-nosr/xprinter-macos/releases/latest) · [Installation](docs/INSTALL.md) · [Русский](docs/README.ru.md) · [Report a problem](https://github.com/ismoil-nosr/xprinter-macos/issues)
+[Download the installer](https://github.com/ismoil-nosr/xprinter-macos/releases/latest) · [Installation](docs/INSTALL.md) · [Русский](docs/README.ru.md) · [简体中文](docs/README.zh-CN.md) · [Report a problem](https://github.com/ismoil-nosr/xprinter-macos/issues)
 
 Print labels from Chrome, Preview and other Mac apps, or use **Open Xprinter** to create barcodes and QR codes, import a PDF/image, and print CSV batches. The driver locates the start of gap/mark labels before each job, preventing a correctly sized label from starting halfway across a gap.
 
 ## Get started
 
-1. Download the `.pkg` from Releases and install it. The first release is **unsigned by Apple**; follow the [macOS approval instructions](docs/INSTALL.md#unsigned-first-release).
+1. Download the `.pkg` from Releases and install it. The current release is **unsigned by Apple**; follow the [macOS approval instructions](docs/INSTALL.md#unsigned-first-release).
 2. Connect your XP-330B over USB, turn it on, and load labels.
 3. Open **Open Xprinter** in Applications. Choose the loaded label size, stock type and actual gap/mark height. Click **Set up printer** if needed, then **Save as default for other apps**.
 4. Print one label before sending a batch. In other apps choose **Xprinter XP-330B Labels (Open Source)** and the matching paper size.
 
 The starting profile is **58 mm across the roll × 40 mm in the feed direction**, with a **2 mm gap**. This is a starting point, not a promise that every roll has a 2 mm gap. Width always means across the print head; height means in the direction the labels move.
 
+Choose **English**, **Русский**, **简体中文**, or **System default** from the app's top-right language menu. Switching takes effect immediately and is remembered for next launch. Your label content, imported file and printer settings stay the same. Chinese and Russian users can follow the linked guides and contribute in their own language.
+
 ## What is included
 
 - A MIT-licensed CUPS raster-to-TSPL driver, written in C and linked to macOS's CUPS library. No proprietary Xprinter driver, Rosetta, Python, Homebrew or online download is needed to print.
 - A universal Swift app with physical-size preview, Code 128, Unicode QR, text labels, PDF/image import and UTF-8 CSV batches.
+- English, Russian and Simplified Chinese interface, menus, help and app errors; localized installer pages and usage guides.
 - Common metric sizes, custom sizes, gap labels, black marks and continuous rolls; adjustable darkness and speed.
 - An idempotent Installer package with USB discovery, clear setup when unplugged, explicit selection when multiple devices are connected, and a scoped uninstaller.
 
@@ -34,7 +37,7 @@ The app generates barcodes at integer printer-dot sizes, keeps quiet zones, and 
 | Print head | 203 dpi, up to 76 mm printable width |
 | Mac | Apple Silicon and Intel, macOS 14 or newer |
 | Label sizes | 30×20, 40×30, 50×30, 50×50, 58×40, 60×40, 70×50, 76×50, 58×100, 76×150 mm; custom 20–76 × 10–1000 mm |
-| Languages | English app; English and Russian setup documentation; Unicode label text |
+| Languages | English, Russian and Simplified Chinese app and usage guides; Unicode label text |
 | Other Xprinter models, Bluetooth, Ethernet | Not supported by this release |
 
 This is an independent project, not an official Xprinter product. Firmware variants and other rolls need hardware verification. The [validation record](docs/VALIDATION.md) separates physical checks from automated ones. A 4×6 inch label is wider than this printer's head; use a suitable template rather than shrinking a shipping barcode until it is unreadable.
@@ -58,7 +61,7 @@ cd xprinter-macos
 
 `dist/` contains a universal `.pkg`. The build uses only Apple frameworks and tools. Tests cover pixel polarity and padding, copies, multiple pages, malformed input, the CUPS PDF rasterizer, QR/barcode decoding from the final TSPL bitmap, setup input validation and package contents. CI also installs, reinstalls and uninstalls the package on fresh Mac runners without a connected printer.
 
-See [development and release instructions](docs/DEVELOPMENT.md) for architecture, signing and notarization. Contributions and hardware reports are welcome; please read [CONTRIBUTING.md](CONTRIBUTING.md).
+See [development and release instructions](docs/DEVELOPMENT.md) for architecture, signing and notarization. Contributions and hardware reports are welcome in English, Russian or Chinese; please read [CONTRIBUTING.md](CONTRIBUTING.md), the [中文贡献指南](docs/CONTRIBUTING.zh-CN.md), and the [translation guide](docs/TRANSLATING.md).
 
 ## Uninstall
 

@@ -134,6 +134,7 @@ class FilterTests(unittest.TestCase):
                  ('qr-30x20', 'LabelGaps', 1, 30, 20, 1),
                  ('qr-58x40', 'LabelGaps', 1, 58, 40, 1),
                  ('unicode-50x30', 'LabelGaps', 1, 50, 30, 1),
+                 ('chinese-58x40', 'LabelGaps', 1, 58, 40, 1),
                  ('batch-58x40', 'LabelGaps', 1, 58, 40, 3),
                  ('barcode-58x40', 'LabelGaps', 2, 58, 40, 1),
                  ('barcode-58x40', 'Continue', 1, 58, 40, 1),

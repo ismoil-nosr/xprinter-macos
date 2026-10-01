@@ -42,6 +42,7 @@ import Vision
                 cursor = start + stride * height
             }
             guard !decoded.isEmpty else { fatalError("No BITMAP found") }
+            if file.lastPathComponent.hasPrefix("chinese-") && !decoded.contains("中文测试-123") { fatalError("Chinese QR payload changed in final printer data") }
             results.append(["file": file.lastPathComponent, "decoded": decoded])
             print("\(file.lastPathComponent): \(decoded) PASS")
         }

@@ -30,6 +30,12 @@ for package in packages:
         info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
         assert info['CFBundleIdentifier'] == 'com.ismoilnosr.openxprinter'
         assert info['CFBundleShortVersionString'] == version
+        assert info['CFBundleDevelopmentRegion'] == 'en'
+        assert info['CFBundleLocalizations'] == ['en', 'ru', 'zh-Hans']
+        for language in info['CFBundleLocalizations']:
+            assert (app / f'Contents/Resources/{language}.lproj/Localizable.strings').is_file()
+            for page in ['welcome.html', 'conclusion.html']:
+                assert (expanded / f'Resources/{language}.lproj/{page}').is_file()
         for binary in [driver / 'rastertoxp330b', app / 'Contents/MacOS/OpenXprinter']:
             subprocess.run(['/usr/bin/lipo', str(binary), '-verify_arch', 'arm64', 'x86_64'], check=True)
             subprocess.run(['/usr/bin/codesign', '--verify', '--strict', str(binary)], check=True)

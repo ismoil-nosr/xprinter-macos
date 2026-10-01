@@ -8,6 +8,10 @@ Initial development: October 2026. Hardware evidence is separate from tests that
 
 GitHub Actions runs builds and these tests on macOS 14 Apple Silicon, macOS 15 Intel and macOS 26 Apple Silicon. It then installs and reinstalls the package on the runner with no USB printer, verifies installed files/permissions and removes only the project's installation. The workflow status is the authority for a given commit; a configured workflow is not evidence that it has passed.
 
+Version 0.2.0 adds translation coverage and printf argument checks for all three catalogs, bundled-resource and installer-page checks, runtime language/error/number formatting and fallback checks, and language-switch tests using an isolated preference domain. Those tests verify that Unicode label content, physical dimensions, stock identifiers, gap, darkness and copies remain unchanged. A Chinese QR fixture is also decoded after the complete CUPS-to-TSPL pipeline.
+
+On the development Mac, the native app was switched through Simplified Chinese, Russian and English. The UI and menu bar changed immediately; status, help and validation messages were checked, while the 58×40 mm size, 2 mm gap and barcode value remained intact. No new hardware print is needed to verify an interface-only change; the physical evidence below concerns the driver baseline.
+
 ## Physical validation
 
 | Configuration | Evidence |

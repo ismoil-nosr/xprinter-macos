@@ -12,6 +12,8 @@ The TSPL sequence is SIZE, GAP/BLINE, reference/direction, speed/darkness, direc
 
 The Swift app uses native AppKit, SwiftUI, Core Image, PDFKit and Vision. Files and printing stay local; there is no telemetry or updater. The setup helper installed by the package is root-owned; the app uses a normal macOS authorization dialog to invoke its fixed path. It does not execute an administrator script from a downloaded/user-writable app bundle. External commands receive argument arrays or strictly quoted, validated setup arguments; the app never stores administrator passwords.
 
+`Localization.swift` loads bundled English, Russian and Simplified Chinese catalogs with an app-only language preference. The view translates display text while preserving stored stock, barcode and CUPS identifiers. A language change refreshes the view and app menus without translating label content. See [TRANSLATING.md](TRANSLATING.md) for resource layout and contributor checks.
+
 Setup owns only queue `XP330B_OpenSource`. It discovers USB locations on each setup/repair, refuses unknown device URIs and conflicting queue ownership, preserves defaults on a repair, and waits for the user to handle pending jobs before reconfiguration. Installation with no device succeeds and defers queue creation. No global printer default, sharing service, launch daemon, root cron job, relaxed permissions or CUPS restart is configured.
 
 ## Building
@@ -31,7 +33,7 @@ APPLICATION_SIGNING_IDENTITY='Developer ID Application: Your Name (TEAMID)' \
 INSTALLER_SIGNING_IDENTITY='Developer ID Installer: Your Name (TEAMID)' \
 ./scripts/build.sh
 ./scripts/test.sh
-./scripts/notarize.sh dist/Open-Xprinter-0.1.0-universal-signed.pkg YOUR_KEYCHAIN_PROFILE
+./scripts/notarize.sh dist/Open-Xprinter-0.2.0-universal-signed.pkg YOUR_KEYCHAIN_PROFILE
 ```
 
 Configure the profile with Apple's `notarytool store-credentials` interactively according to [Apple's notarization guide](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution). The notarization helper submits the signed package, staples the result and assesses it. A successful build alone does not establish successful notarization.

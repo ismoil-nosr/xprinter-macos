@@ -18,7 +18,7 @@ for arch in arm64 x86_64; do
     /usr/bin/xcrun clang -std=c11 -Wall -Wextra -Werror -Wno-deprecated-declarations -O2 \
         -target "$arch-apple-macos14" src/filter/rastertoxp330b.c -lcups -o "$BUILD_DIR/rastertoxp330b-$arch"
     /usr/bin/xcrun swiftc -swift-version 5 -O -target "$arch-apple-macosx14.0" \
-        src/app/LabelRenderer.swift src/app/XprinterLabels.swift -o "$BUILD_DIR/OpenXprinter-$arch" \
+        src/app/Localization.swift src/app/LabelRenderer.swift src/app/XprinterLabels.swift -o "$BUILD_DIR/OpenXprinter-$arch" \
         -framework AppKit -framework SwiftUI -framework CoreImage -framework PDFKit -framework Vision
 done
 /usr/bin/lipo -create "$BUILD_DIR/rastertoxp330b-arm64" "$BUILD_DIR/rastertoxp330b-x86_64" -output "$DRIVER/rastertoxp330b"
@@ -29,6 +29,12 @@ done
 /usr/bin/xcrun swift scripts/MakeIcon.swift "$BUILD_DIR/OpenXprinter.iconset"
 /usr/bin/iconutil -c icns "$BUILD_DIR/OpenXprinter.iconset" -o "$APP/Contents/Resources/OpenXprinter.icns"
 /usr/bin/install -m 0644 LICENSE README.md docs/INSTALL.md "$APP/Contents/Resources/"
+for language in en ru zh-Hans; do
+    mkdir -p "$APP/Contents/Resources/$language.lproj"
+    /usr/bin/install -m 0644 "src/app/Resources/$language.lproj/Localizable.strings" "$APP/Contents/Resources/$language.lproj/"
+done
+/usr/bin/install -m 0644 docs/README.ru.md "$APP/Contents/Resources/ru.lproj/README.md"
+/usr/bin/install -m 0644 docs/README.zh-CN.md "$APP/Contents/Resources/zh-Hans.lproj/README.md"
 python3 - "$APP" "$VERSION" <<'PY'
 from pathlib import Path
 import plistlib, sys
@@ -38,6 +44,7 @@ info = {
     'CFBundleName': 'Open Xprinter', 'CFBundleDisplayName': 'Open Xprinter',
     'CFBundlePackageType': 'APPL', 'CFBundleIconFile': 'OpenXprinter',
     'CFBundleShortVersionString': version, 'CFBundleVersion': version,
+    'CFBundleDevelopmentRegion': 'en', 'CFBundleLocalizations': ['en', 'ru', 'zh-Hans'],
     'LSMinimumSystemVersion': '14.0', 'NSHighResolutionCapable': True,
     'NSPrincipalClass': 'NSApplication', 'NSHumanReadableCopyright': 'Copyright 2026 Ismoil Nosr. MIT License.',
     'CFBundleDocumentTypes': [{'CFBundleTypeName': 'Labels', 'CFBundleTypeRole': 'Viewer',
@@ -78,6 +85,14 @@ fi
 OUTPUT="$PROJECT_DIR/dist/Open-Xprinter-$VERSION-universal-$suffix.pkg"
 mkdir -p "$BUILD_DIR/resources"
 /usr/bin/install -m 0644 packaging/welcome.html packaging/conclusion.html "$BUILD_DIR/resources/"
+for language in en ru zh-Hans; do
+    mkdir -p "$BUILD_DIR/resources/$language.lproj"
+    if [[ "$language" == en ]]; then
+        /usr/bin/install -m 0644 packaging/welcome.html packaging/conclusion.html "$BUILD_DIR/resources/$language.lproj/"
+    else
+        /usr/bin/install -m 0644 "packaging/$language.lproj/welcome.html" "packaging/$language.lproj/conclusion.html" "$BUILD_DIR/resources/$language.lproj/"
+    fi
+done
 /usr/bin/install -m 0644 LICENSE "$BUILD_DIR/resources/LICENSE.txt"
 /usr/bin/productbuild "${product_args[@]}" "$OUTPUT"
 printf 'Built %s\n' "$OUTPUT"

@@ -17,7 +17,7 @@ def generate():
     lines = [
         '*PPD-Adobe: "4.3"', '*% SPDX-License-Identifier: MIT',
         '*% Copyright (c) 2026 Ismoil Nosr', '*FormatVersion: "4.3"',
-        '*FileVersion: "0.1.0"', '*LanguageVersion: English', '*LanguageEncoding: ISOLatin1',
+        '*FileVersion: "0.2.0"', '*LanguageVersion: English', '*LanguageEncoding: ISOLatin1',
         '*PCFileName: "XP330BOS.PPD"', '*Manufacturer: "Open Xprinter"',
         '*Product: "(XP-330B)"', '*ModelName: "Open Xprinter XP-330B"',
         '*ShortNickName: "XP-330B Open Source"',

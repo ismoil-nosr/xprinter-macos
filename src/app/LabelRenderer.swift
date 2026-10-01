@@ -7,8 +7,12 @@ import Vision
 
 enum LabelFailure: LocalizedError {
     case message(String)
+    case formatted(String, [CVarArg])
     var errorDescription: String? {
-        switch self { case .message(let text): return text }
+        switch self {
+        case .message(let text): return L(text)
+        case .formatted(let key, let arguments): return Localization.formatted(key, arguments)
+        }
     }
 }
 
@@ -158,7 +162,7 @@ enum LabelRenderer {
         }
         var result: [LabelConfig] = []
         for (index, cells) in rows.dropFirst().enumerated() {
-            guard cells.count == headers.count else { throw LabelFailure.message("CSV row \(index + 2) has the wrong number of columns.") }
+            guard cells.count == headers.count else { throw LabelFailure.formatted("CSV row %d has the wrong number of columns.", [index + 2]) }
             let record = Dictionary(uniqueKeysWithValues: zip(headers, cells))
             var item = config
             item.title = record["title"] ?? ""
@@ -168,7 +172,7 @@ enum LabelRenderer {
             case "code128", "code 128", "barcode": item.kind = "Code 128"
             case "qr", "qrcode", "qr code": item.kind = "QR code"
             case "text", "text only": item.kind = "Text only"
-            default: throw LabelFailure.message("CSV row \(index + 2): type must be code128, qr or text.")
+            default: throw LabelFailure.formatted("CSV row %d: type must be code128, qr or text.", [index + 2])
             }
             guard let quantity = Int(record["quantity"] ?? "1"), (1...100).contains(quantity), result.count + quantity <= 500 else {
                 throw LabelFailure.message("CSV quantities must be 1–100 per row and at most 500 labels in total.")
@@ -199,7 +203,7 @@ enum LabelRenderer {
             case "pdf":
                 guard let doc = CGPDFDocument(url as CFURL), (1...200).contains(doc.numberOfPages) else { throw LabelFailure.message("Choose a readable PDF with 1–200 pages.") }
                 for n in 1...doc.numberOfPages {
-                    guard let page = doc.page(at: n) else { throw LabelFailure.message("Could not read PDF page \(n).") }
+                    guard let page = doc.page(at: n) else { throw LabelFailure.formatted("Could not read PDF page %d.", [n]) }
                     var sourceSize = page.getBoxRect(.cropBox).size
                     let rotation = (Int(page.rotationAngle) + (config.rotateImport ? 90 : 0)) % 180
                     if rotation != 0 { sourceSize = CGSize(width: sourceSize.height, height: sourceSize.width) }
@@ -258,9 +262,17 @@ enum LabelRenderer {
         var unicode = LabelConfig(); unicode.width = 50; unicode.height = 30
         unicode.title = "Товар · Mahsulot"; unicode.kind = "QR code"; unicode.code = "Тест-123"; unicode.footer = "25 000 UZS"
         try pdf(unicode).write(to: root.appendingPathComponent("unicode-50x30.pdf"))
-        let req = VNDetectBarcodesRequest(); try VNImageRequestHandler(cgImage: labelImage(unicode)).perform([req])
+        let req = VNDetectBarcodesRequest(); req.symbologies = [.qr]; req.usesCPUOnly = true
+        try VNImageRequestHandler(cgImage: labelImage(unicode)).perform([req])
         guard req.results?.contains(where: { $0.payloadStringValue == unicode.code }) == true else { throw LabelFailure.message("Unicode QR decoding failed.") }
         report.append(["test": "unicode-50x30.pdf", "decoded": true])
+        var chinese = LabelConfig(); chinese.title = "商品示例"; chinese.kind = "QR code"
+        chinese.code = "中文测试-123"; chinese.footer = "¥25"
+        try pdf(chinese).write(to: root.appendingPathComponent("chinese-58x40.pdf"))
+        let chineseRequest = VNDetectBarcodesRequest(); chineseRequest.symbologies = [.qr]; chineseRequest.usesCPUOnly = true
+        try VNImageRequestHandler(cgImage: labelImage(chinese)).perform([chineseRequest])
+        guard chineseRequest.results?.contains(where: { $0.payloadStringValue == chinese.code }) == true else { throw LabelFailure.message("Chinese QR decoding failed.") }
+        report.append(["test": "chinese-58x40.pdf", "decoded": true])
         var tooDense = LabelConfig(); tooDense.code = String(repeating: "W", count: 60)
         do { _ = try labelImage(tooDense); throw LabelFailure.message("Dense barcode was not rejected.") }
         catch let error as LabelFailure { guard error.localizedDescription.contains("too dense") else { throw error } }
