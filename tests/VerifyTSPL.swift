@@ -33,6 +33,8 @@ import Vision
                 let provider = CGDataProvider(data: pixels as CFData)!
                 let image = CGImage(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 8, bytesPerRow: width, space: CGColorSpaceCreateDeviceGray(), bitmapInfo: [], provider: provider, decode: nil, shouldInterpolate: false, intent: .defaultIntent)!
                 let request = VNDetectBarcodesRequest()
+                request.symbologies = [.code128, .qr]
+                request.usesCPUOnly = true
                 try VNImageRequestHandler(cgImage: image).perform([request])
                 let values = request.results?.compactMap(\.payloadStringValue) ?? []
                 guard !values.isEmpty else { fatalError("Barcode failed to decode in final printer data: \(file.lastPathComponent)") }

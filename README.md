@@ -1,5 +1,7 @@
 # Open Xprinter for macOS
 
+[![Build, test and package](https://github.com/ismoil-nosr/xprinter-macos/actions/workflows/build.yml/badge.svg)](https://github.com/ismoil-nosr/xprinter-macos/actions/workflows/build.yml)
+
 A native USB label driver and printing app for **Xprinter XP-330B**, with an offline installer for **macOS 14+ on Apple Silicon and Intel**.
 
 [Download the installer](https://github.com/ismoil-nosr/xprinter-macos/releases/latest) · [Installation](docs/INSTALL.md) · [Русский](docs/README.ru.md) · [Report a problem](https://github.com/ismoil-nosr/xprinter-macos/issues)

@@ -13,7 +13,7 @@ GitHub Actions runs builds and these tests on macOS 14 Apple Silicon, macOS 15 I
 | Configuration | Evidence |
 | --- | --- |
 | XP-330B, USB, Apple Silicon, macOS 26.5, 58×40 mm gap stock | The label-start fix using HOME after SIZE/GAP was physically confirmed: the full QR and both text lines stayed on one label. That first confirmation used the vendor rasterizer with an independently written alignment wrapper. |
-| Independent open source filter, same printer/roll | Pending a separate physical print check before the release is finalized. |
+| Independent open source filter, same printer/roll | Installed from this project's universal .pkg. A generated 58×40 mm label with a QR, product title and numeric caption printed wholly on one label; the operator confirmed no gap split or unwanted skipped label. The new queue completed the job and returned idle. |
 | Intel Mac with physical printer | Not physically tested; native CI tests do not attach a printer. |
 | Black marks, continuous rolls, different firmware/stock | Command generation tested; no physical compatibility claim for every variant. |
 

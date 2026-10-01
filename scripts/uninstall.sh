@@ -13,7 +13,7 @@ if /usr/bin/lpstat -p "$QUEUE" >/dev/null 2>&1; then
     [[ -z "$(/usr/bin/lpstat -W not-completed -o "$QUEUE")" ]] || { printf '%s\n' 'Finish or cancel pending jobs before uninstalling.' >&2; exit 1; }
     run /usr/sbin/lpadmin -x "$QUEUE"
 fi
-if [[ "$(/bin/readlink /usr/libexec/cups/filter/rastertoxp330b 2>/dev/null || true)" == /Library/Printers/OpenXprinter/rastertoxp330b ]]; then
+if [[ "$(/usr/bin/readlink /usr/libexec/cups/filter/rastertoxp330b 2>/dev/null || true)" == /Library/Printers/OpenXprinter/rastertoxp330b ]]; then
     run /bin/rm /usr/libexec/cups/filter/rastertoxp330b
 fi
 if [[ -f '/Applications/Open Xprinter.app/Contents/Info.plist' ]]; then

@@ -4,7 +4,7 @@ set -Eeuo pipefail
 [[ "${3:-/}" == / ]] || { printf '%s\n' 'Install Open Xprinter on the running startup disk.' >&2; exit 1; }
 FILTER=/usr/libexec/cups/filter/rastertoxp330b
 if [[ -e "$FILTER" || -L "$FILTER" ]]; then
-    [[ "$(/bin/readlink "$FILTER" 2>/dev/null || true)" == /Library/Printers/OpenXprinter/rastertoxp330b ]] || { printf '%s\n' 'Another driver owns rastertoxp330b. Installation stopped without replacing it.' >&2; exit 1; }
+    [[ "$(/usr/bin/readlink "$FILTER" 2>/dev/null || true)" == /Library/Printers/OpenXprinter/rastertoxp330b ]] || { printf '%s\n' 'Another driver owns rastertoxp330b. Installation stopped without replacing it.' >&2; exit 1; }
 fi
 APP='/Applications/Open Xprinter.app'
 if [[ -e "$APP" ]]; then

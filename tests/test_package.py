@@ -2,6 +2,8 @@
 """Inspect the built package without running installer scripts or modifying printers."""
 from pathlib import Path
 import plistlib
+import os
+import re
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
@@ -10,6 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 version = (ROOT / 'VERSION').read_text().strip()
 packages = list((ROOT / 'dist').glob(f'Open-Xprinter-{version}-universal-*.pkg'))
 assert packages, 'Missing installer'
+for directory in ['scripts', 'packaging/scripts', 'tests']:
+    for script in (ROOT / directory).glob('*'):
+        if script.suffix != '.sh' and directory != 'packaging/scripts':
+            continue
+        for command in set(re.findall(r'/(?:usr/(?:bin|sbin)|bin|sbin)/[A-Za-z0-9_+-]+', script.read_text())):
+            assert os.access(command, os.X_OK), f'Missing macOS tool referenced by {script.name}: {command}'
 for package in packages:
     with tempfile.TemporaryDirectory(prefix='open-xprinter-package-') as directory:
         expanded = Path(directory) / 'expanded'

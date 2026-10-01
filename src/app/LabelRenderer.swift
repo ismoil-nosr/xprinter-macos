@@ -33,7 +33,8 @@ struct LabelConfig {
 
 enum LabelRenderer {
     static let dpi = 203.0
-    static let ciContext = CIContext(options: [.useSoftwareRenderer: false])
+    // Barcode generation is tiny; CPU rendering also works on Macs without a GPU context.
+    static let ciContext = CIContext(options: [.useSoftwareRenderer: true])
 
     static func drawText(_ text: String, in rect: CGRect, fontSize: CGFloat, bold: Bool = false, maxLines: Int = 1) throws {
         guard !text.isEmpty else { return }
@@ -236,13 +237,18 @@ enum LabelRenderer {
           for kind in ["Code 128", "QR code"] {
             var cfg = LabelConfig(); cfg.kind = kind; cfg.width = dimensions.0; cfg.height = dimensions.1
             let image = try labelImage(cfg)
-            let req = VNDetectBarcodesRequest()
-            try VNImageRequestHandler(cgImage: image).perform([req])
-            guard req.results?.contains(where: { $0.payloadStringValue == cfg.code }) == true else { throw LabelFailure.message("\(kind) failed decoding at printer resolution.") }
             let prefix = kind == "Code 128" ? "barcode" : "qr"
             let name = "\(prefix)-\(Int(cfg.width))x\(Int(cfg.height)).pdf"
             let pdfData = try pdf(cfg)
             try pdfData.write(to: root.appendingPathComponent(name))
+            if let png = NSBitmapImageRep(cgImage: image).representation(using: .png, properties: [:]) {
+                try png.write(to: root.appendingPathComponent(name.replacingOccurrences(of: ".pdf", with: ".png")))
+            }
+            let req = VNDetectBarcodesRequest()
+            req.symbologies = [.code128, .qr]
+            req.usesCPUOnly = true
+            try VNImageRequestHandler(cgImage: image).perform([req])
+            guard req.results?.contains(where: { $0.payloadStringValue == cfg.code }) == true else { throw LabelFailure.message("\(kind) \(cfg.width)×\(cfg.height) mm failed decoding at printer resolution; the generated PNG/PDF were saved for diagnosis.") }
             let doc = PDFDocument(data: pdfData)!
             let bounds = doc.page(at: 0)!.bounds(for: .mediaBox)
             guard abs(bounds.width - cfg.pageSize.width) < 0.01 && abs(bounds.height - cfg.pageSize.height) < 0.01 else { throw LabelFailure.message("PDF size mismatch.") }

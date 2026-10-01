@@ -12,7 +12,7 @@ for attempt in 1 2; do
     /usr/bin/codesign --verify --strict /Library/Printers/OpenXprinter/rastertoxp330b
     [[ "$(/usr/bin/stat -f %u /Library/Printers/OpenXprinter/setup-printer.sh)" == 0 ]]
     [[ "$(/usr/bin/stat -f %Lp /Library/Printers/OpenXprinter/setup-printer.sh)" == 755 ]]
-    [[ "$(/bin/readlink /usr/libexec/cups/filter/rastertoxp330b)" == /Library/Printers/OpenXprinter/rastertoxp330b ]]
+    [[ "$(/usr/bin/readlink /usr/libexec/cups/filter/rastertoxp330b)" == /Library/Printers/OpenXprinter/rastertoxp330b ]]
     '/Applications/Open Xprinter.app/Contents/MacOS/OpenXprinter' --self-test "$PROJECT_DIR/build/tests/installed-$attempt" > /dev/null
 done
 sudo /Library/Printers/OpenXprinter/uninstall.sh

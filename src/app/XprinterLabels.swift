@@ -322,15 +322,6 @@ struct LabelsView: View {
                         Button("Open PDF, image or CSV…") { model.chooseFile() }
                         Text("Drop a file onto the preview. CSV columns: code; optional title, footer, type, quantity.").font(.caption).foregroundStyle(.secondary)
                         Divider()
-                        Text("3. Print").font(.headline)
-                        Stepper("Copies: \(model.copies)", value: $model.copies, in: 1...100)
-                        HStack {
-                            Button("Save PDF…") { model.export() }.disabled(model.data == nil)
-                            Spacer()
-                            Button(model.working ? "Working…" : "Print \(model.totalLabels) label\(model.totalLabels == 1 ? "" : "s")") { model.printLabels() }
-                                .buttonStyle(.borderedProminent).keyboardShortcut("p", modifiers: .command)
-                                .disabled(!model.ready || model.data == nil || model.working)
-                        }
                         DisclosureGroup("Printer settings & help") {
                             VStack(alignment: .leading, spacing: 10) {
                                 Stepper("Darkness: \(model.darkness)", value: $model.darkness, in: 0...15)
@@ -369,6 +360,16 @@ struct LabelsView: View {
                         return true
                     }
             }
+            Divider()
+            HStack(spacing: 18) {
+                Text("3. Print").font(.headline)
+                Stepper("Copies: \(model.copies)", value: $model.copies, in: 1...100).fixedSize()
+                Spacer()
+                Button("Save PDF…") { model.export() }.disabled(model.data == nil)
+                Button(model.working ? "Working…" : "Print \(model.totalLabels) label\(model.totalLabels == 1 ? "" : "s")") { model.printLabels() }
+                    .buttonStyle(.borderedProminent).keyboardShortcut("p", modifiers: .command)
+                    .disabled(!model.ready || model.data == nil || model.working)
+            }.padding(16)
             if !model.error.isEmpty { Text(model.error).foregroundStyle(.red).font(.callout).frame(maxWidth: .infinity, alignment: .leading).padding(14).background(.red.opacity(0.06)) }
             if !model.notice.isEmpty { Text(model.notice).font(.callout).frame(maxWidth: .infinity, alignment: .leading).padding(14).background(.blue.opacity(0.06)) }
         }
