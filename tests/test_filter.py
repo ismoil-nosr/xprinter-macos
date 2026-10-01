@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,6 +97,20 @@ class FilterTests(unittest.TestCase):
         stream = run_filter(path, stdin=True)
         self.assertEqual(file.returncode, stream.returncode)
         self.assertEqual(file.stdout, stream.stdout)
+
+    def test_named_input_rejects_symlink_fifo_directory_and_device(self):
+        # O_NONBLOCK must prevent a named FIFO with no writer from hanging.
+        # Streamed raster input via stdin remains covered by the preceding test.
+        with tempfile.TemporaryDirectory(prefix='unsafe-raster-', dir=OUTPUT) as directory:
+            folder = Path(directory)
+            link, fifo = folder / 'link.raster', folder / 'pipe.raster'
+            link.symlink_to(self.fixture())
+            os.mkfifo(fifo)
+            for path in [link, fifo, folder, Path('/dev/null')]:
+                with self.subTest(path=path.name):
+                    result = run_filter(path)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertEqual(result.stdout, b'')
 
     def test_rejects_unsupported_headers_without_printer_output(self):
         for fmt in ['wide', 'tall', 'dpi', 'rgba']:

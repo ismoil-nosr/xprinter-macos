@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 enum { MAX_WIDTH = 609, MAX_HEIGHT = 7993, MAX_COPIES = 100 };
@@ -176,8 +177,17 @@ int main(int argc, char **argv) {
     if (!settings(argc, argv, &s)) return 1;
     Input input = { STDIN_FILENO, 0, 0 };
     if (argc == 7) {
-        input.fd = open(argv[6], O_RDONLY | O_NOFOLLOW);
+        /* CUPS supplies its spool file as argv[6]; print options/data cannot
+         * select this path. Direct invocation runs with the caller's own rights.
+         * Named inputs must be regular files; streamed jobs still use stdin. */
+        input.fd = open(argv[6], O_RDONLY | O_NOFOLLOW | O_NONBLOCK);
         if (input.fd < 0) { fputs("ERROR: Cannot open the raster input.\n", stderr); return 1; }
+        struct stat input_stat;
+        if (fstat(input.fd, &input_stat) < 0 || !S_ISREG(input_stat.st_mode)) {
+            close(input.fd);
+            fputs("ERROR: Raster filename must identify a regular file.\n", stderr);
+            return 1;
+        }
     }
     cups_raster_t *raster = cupsRasterOpenIO(read_input, &input, CUPS_RASTER_READ);
     int failed = raster == NULL, pages = 0;

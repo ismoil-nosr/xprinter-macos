@@ -29,4 +29,6 @@ Submit additional reports with model/firmware, macOS version, CPU, USB connectio
 
 Local checks passed on 2026-10-01: early CSV rejection at record 501 and expanded quantity 501, field-byte/column/input limits, BOM/CRLF/quoted multiline Chinese/Russian data, nonlocal URL rejection, and an independent 25-second native deadline with stdin deliberately left open. Barcode decoding through the CUPS-to-TSPL pipeline, all three translation catalogs and the universal package layout/signatures/permissions also passed. No new physical print was sent.
 
+Named CUPS raster inputs reject symlinks, FIFOs without writers, directories and devices without printer output or blocking. Normal file/stdin raster jobs still produce identical bytes. Security gate regressions cover SARIF driver/extension rules, high/critical thresholds, unresolved metadata, exact reviewed locations and invalidated/expired source-bound triage.
+
 The app/filter depend on macOS frameworks and system libcups; current system-parser advisories and OS patch state cannot be certified by this repository's checks. CI adds CodeQL and release gates; see the [security policy](../SECURITY.md).
