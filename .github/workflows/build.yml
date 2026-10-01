@@ -11,6 +11,12 @@ concurrency:
   group: open-xprinter-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 jobs:
+  security:
+    uses: ./.github/workflows/security.yml
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
   build:
     strategy:
       fail-fast: false
@@ -20,6 +26,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
       - name: Validate release version
         if: startsWith(github.ref, 'refs/tags/')
         run: test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
@@ -46,7 +54,7 @@ jobs:
           if-no-files-found: ignore
   release:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: build
+    needs: [build, security]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -61,7 +69,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           cd release-artifacts/dist
-          sha256sum *.pkg > SHA256SUMS.txt
-          gh release create "$GITHUB_REF_NAME" *.pkg SHA256SUMS.txt \
+          sha256sum ./*.pkg > SHA256SUMS.txt
+          gh release create "$GITHUB_REF_NAME" ./*.pkg SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" --title "Open Xprinter $GITHUB_REF_NAME" \
             --notes-file "$GITHUB_WORKSPACE/docs/RELEASE-NOTES.md"

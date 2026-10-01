@@ -33,7 +33,7 @@ APPLICATION_SIGNING_IDENTITY='Developer ID Application: Your Name (TEAMID)' \
 INSTALLER_SIGNING_IDENTITY='Developer ID Installer: Your Name (TEAMID)' \
 ./scripts/build.sh
 ./scripts/test.sh
-./scripts/notarize.sh dist/Open-Xprinter-0.2.0-universal-signed.pkg YOUR_KEYCHAIN_PROFILE
+./scripts/notarize.sh dist/Open-Xprinter-0.3.1-universal-signed.pkg YOUR_KEYCHAIN_PROFILE
 ```
 
 Configure the profile with Apple's `notarytool store-credentials` interactively according to [Apple's notarization guide](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution). The notarization helper submits the signed package, staples the result and assesses it. A successful build alone does not establish successful notarization.

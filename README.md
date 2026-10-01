@@ -82,3 +82,7 @@ Use `--dry-run` to preview. The uninstaller removes only this project's queue, a
 ## License
 
 [MIT](LICENSE), copyright Ismoil Nosr. All distributed project code, the PPD and app are open source. Proprietary vendor binaries, vendor PPDs and SDK manuals are not bundled. macOS libraries and frameworks remain covered by Apple's licenses. Xprinter is a trademark of its respective owner.
+
+## Security
+
+[Security policy and private reporting](SECURITY.md). CSV imports are limited to 4 MiB, 16 columns, 4,096 UTF-8 bytes per field and 500 expanded labels. Keep macOS updated; the package is currently unsigned by Apple and not notarized.

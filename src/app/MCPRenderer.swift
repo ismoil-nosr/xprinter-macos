@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Ismoil Nosr
 import AppKit
 import PDFKit
+import Darwin
 
 /// A bounded stdin/stdout bridge. Rendering shares the GUI's label implementation;
 /// this entry point never configures a queue or submits a print job.
@@ -108,6 +109,11 @@ enum MCPRenderer {
     }
 
     static func run() -> Int32 {
+        // Also bound the remote Mac process if its SSH caller disconnects.
+        // This handler uses only the async-signal-safe POSIX exit operation.
+        signal(SIGALRM) { _ in _exit(124) }
+        alarm(25)
+        defer { alarm(0) }
         Localization.configure(.english)
         do {
             var input = Data()

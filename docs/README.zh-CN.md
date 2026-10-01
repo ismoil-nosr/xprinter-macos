@@ -99,3 +99,7 @@ sudo /Library/Printers/OpenXprinter/uninstall.sh
 ```
 
 添加 `--dry-run` 可预览操作。卸载仅移除本项目的应用、驱动、队列和安装收据，保留其他打印机、用户文档和偏好设置。
+
+## 安全
+
+[安全策略与私密漏洞报告](../SECURITY.md)。CSV 限制为 4 MiB、16 列、每字段 4,096 个 UTF-8 字节，以及展开数量后最多 500 张标签。0.3.1 会立即拒绝超限记录。MCP 原生渲染器具有独立的 25 秒期限；使用 MCP 0.2.1 时请升级。请及时安装 macOS 安全更新，系统 PDF、图像与 CUPS 库由 Apple 维护。安装包目前没有 Apple Developer ID 签名，也未经过公证。

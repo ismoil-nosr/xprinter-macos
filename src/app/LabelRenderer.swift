@@ -133,37 +133,34 @@ enum LabelRenderer {
     }
 
     static func parseCSV(_ text: String, config: LabelConfig) throws -> [LabelConfig] {
-        var rows: [[String]] = []
-        var row: [String] = [], field = "", quoted = false
-        let normalized = text.replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
-        let chars = Array(normalized)
-        var i = 0
-        while i < chars.count {
-            let ch = chars[i]
-            if ch == "\"" {
-                if quoted && i + 1 < chars.count && chars[i + 1] == "\"" { field.append("\""); i += 1 }
-                else { quoted.toggle() }
-            } else if ch == "," && !quoted { row.append(field); field = "" }
-            else if (ch == "\n" || ch == "\r") && !quoted {
-                row.append(field); field = ""
-                if row.contains(where: { !$0.isEmpty }) { rows.append(row) }
-                row = []
-                if ch == "\r" && i + 1 < chars.count && chars[i + 1] == "\n" { i += 1 }
-            } else { field.append(ch) }
-            i += 1
-        }
-        guard !quoted else { throw LabelFailure.message("CSV has an unclosed quoted field.") }
-        row.append(field)
-        if row.contains(where: { !$0.isEmpty }) { rows.append(row) }
-        guard let first = rows.first, rows.count > 1 else { throw LabelFailure.message("CSV needs a header row and at least one label.") }
-        let headers = first.map { $0.replacingOccurrences(of: "\u{FEFF}", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
-        guard Set(headers).count == headers.count, headers.contains("code") else {
-            throw LabelFailure.message("CSV needs a code column and unique headers. Optional: title, footer, type, quantity.")
-        }
+        guard text.utf8.count <= 4 * 1024 * 1024 else { throw LabelFailure.message("Choose a CSV smaller than 4 MB.") }
+        // Keep the current bounded field/row and validate it immediately.
+        // UTF-8 iteration avoids an amplified Array<Character> for the whole file.
+        var headers: [String]?
+        var row: [String] = [], field: [UInt8] = [], quoted = false
+        var rowNumber = 0
         var result: [LabelConfig] = []
-        for (index, cells) in rows.dropFirst().enumerated() {
-            guard cells.count == headers.count else { throw LabelFailure.formatted("CSV row %d has the wrong number of columns.", [index + 2]) }
-            let record = Dictionary(uniqueKeysWithValues: zip(headers, cells))
+        func appendByte(_ byte: UInt8) throws {
+            guard field.count < 4096 else { throw LabelFailure.message("CSV fields must be at most 4,096 bytes.") }
+            field.append(byte)
+        }
+        func finishField() throws {
+            guard row.count < 16 else { throw LabelFailure.message("CSV must have at most 16 columns.") }
+            row.append(String(decoding: field, as: UTF8.self)); field.removeAll(keepingCapacity: true)
+        }
+        func finishRow() throws {
+            defer { row.removeAll(keepingCapacity: true) }
+            guard row.contains(where: { !$0.isEmpty }) else { return }
+            rowNumber += 1
+            guard let columns = headers else {
+                let first = row.map { $0.replacingOccurrences(of: "\u{FEFF}", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
+                guard Set(first).count == first.count, first.contains("code") else {
+                    throw LabelFailure.message("CSV needs a code column and unique headers. Optional: title, footer, type, quantity.")
+                }
+                headers = first; return
+            }
+            guard row.count == columns.count else { throw LabelFailure.formatted("CSV row %d has the wrong number of columns.", [rowNumber]) }
+            let record = Dictionary(uniqueKeysWithValues: zip(columns, row))
             var item = config
             item.title = record["title"] ?? ""
             item.code = record["code"] ?? ""
@@ -172,14 +169,47 @@ enum LabelRenderer {
             case "code128", "code 128", "barcode": item.kind = "Code 128"
             case "qr", "qrcode", "qr code": item.kind = "QR code"
             case "text", "text only": item.kind = "Text only"
-            default: throw LabelFailure.formatted("CSV row %d: type must be code128, qr or text.", [index + 2])
+            default: throw LabelFailure.formatted("CSV row %d: type must be code128, qr or text.", [rowNumber])
             }
             guard let quantity = Int(record["quantity"] ?? "1"), (1...100).contains(quantity), result.count + quantity <= 500 else {
                 throw LabelFailure.message("CSV quantities must be 1–100 per row and at most 500 labels in total.")
             }
-            result.append(contentsOf: Array(repeating: item, count: quantity))
+            try item.validate()
+            result.append(contentsOf: repeatElement(item, count: quantity))
         }
+        let bytes = text.utf8
+        var index = bytes.startIndex
+        while index < bytes.endIndex {
+            let byte = bytes[index]
+            var next = bytes.index(after: index)
+            if byte == 34 {
+                if quoted && next < bytes.endIndex && bytes[next] == 34 {
+                    try appendByte(34); next = bytes.index(after: next)
+                } else { quoted.toggle() }
+            } else if byte == 44 && !quoted { try finishField() }
+            else if byte == 10 || byte == 13 {
+                if quoted { try appendByte(10) }
+                else { try finishField(); try finishRow() }
+                if byte == 13 && next < bytes.endIndex && bytes[next] == 10 { next = bytes.index(after: next) }
+            } else { try appendByte(byte) }
+            index = next
+        }
+        guard !quoted else { throw LabelFailure.message("CSV has an unclosed quoted field.") }
+        try finishField(); try finishRow()
+        guard headers != nil, !result.isEmpty else { throw LabelFailure.message("CSV needs a header row and at least one label.") }
         return result
+    }
+
+    static func readCSV(_ url: URL) throws -> String {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var data = Data()
+        while let chunk = try handle.read(upToCount: 64 * 1024), !chunk.isEmpty {
+            guard data.count + chunk.count <= 4 * 1024 * 1024 else { throw LabelFailure.message("Choose a CSV smaller than 4 MB.") }
+            data.append(chunk)
+        }
+        guard let text = String(data: data, encoding: .utf8) else { throw LabelFailure.message("Save the CSV with UTF-8 encoding.") }
+        return text
     }
 
     static func pdf(_ config: LabelConfig, imported: URL? = nil) throws -> Data {
@@ -191,11 +221,15 @@ enum LabelRenderer {
         }
         func startPage() { ctx.beginPDFPage(nil); ctx.setFillColor(CGColor(gray: 1, alpha: 1)); ctx.fill(mediaBox) }
         if let url = imported {
-            let fileSize = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+            guard url.isFileURL else { throw LabelFailure.message("Choose a regular local file.") }
+            let values = try url.resourceValues(forKeys: [.fileSizeKey, .isRegularFileKey])
+            guard values.isRegularFile == true else { throw LabelFailure.message("Choose a regular local file.") }
+            let fileSize = values.fileSize ?? 0
             guard fileSize <= 32 * 1024 * 1024 else { throw LabelFailure.message("Choose a file smaller than 32 MB.") }
             switch url.pathExtension.lowercased() {
             case "csv":
-                let text = try String(contentsOf: url, encoding: .utf8)
+                guard fileSize <= 4 * 1024 * 1024 else { throw LabelFailure.message("Choose a CSV smaller than 4 MB.") }
+                let text = try readCSV(url)
                 for record in try parseCSV(text, config: config) {
                     let image = try labelImage(record)
                     startPage(); ctx.interpolationQuality = .none; ctx.draw(image, in: mediaBox); ctx.endPDFPage()
@@ -278,6 +312,39 @@ enum LabelRenderer {
         catch let error as LabelFailure { guard error.localizedDescription.contains("too dense") else { throw error } }
         let records = try parseCSV("title,code,footer,type,quantity\r\n\"Item, one\",12345678,,code128,2\r\n\"Item \"\"two\"\"\",SKU002,,qr,1\r\n", config: LabelConfig())
         guard records.count == 3, records[0].title == "Item, one", records[2].title == "Item \"two\"" else { throw LabelFailure.message("CSV parsing failed.") }
+        func expectCSVFailure(_ text: String, _ expected: String) throws {
+            do { _ = try parseCSV(text, config: LabelConfig()) }
+            catch let failure as LabelFailure {
+                guard failure.localizedDescription == expected else { throw failure }
+                return
+            }
+            throw LabelFailure.message("CSV resource limit was not enforced.")
+        }
+        let quotaError = "CSV quantities must be 1–100 per row and at most 500 labels in total."
+        guard try parseCSV("code\n" + String(repeating: "a\n", count: 500), config: LabelConfig()).count == 500 else {
+            throw LabelFailure.message("CSV 500-label boundary failed.")
+        }
+        // The trailing unclosed quote must never be read after rejecting record 501.
+        try expectCSVFailure("code\n" + String(repeating: "a\n", count: 501) + "\"unfinished", quotaError)
+        try expectCSVFailure("code,quantity\na,100\nb,100\nc,100\nd,100\ne,100\nf,1\n\"unfinished", quotaError)
+        try expectCSVFailure("code\n\"" + String(repeating: "a", count: 4097), "CSV fields must be at most 4,096 bytes.")
+        try expectCSVFailure("code\n\"" + String(repeating: "中", count: 1366), "CSV fields must be at most 4,096 bytes.")
+        try expectCSVFailure((0..<17).map { "column\($0)" }.joined(separator: ","), "CSV must have at most 16 columns.")
+        try expectCSVFailure(String(repeating: "\n", count: 4 * 1024 * 1024 + 1), "Choose a CSV smaller than 4 MB.")
+        let dialect = try parseCSV("\u{FEFF}title,code,type\r\n\"商品\r\nТовар, \"\"one\"\"\",中文,qr\r\n\r\n", config: LabelConfig())
+        guard dialect.count == 1, dialect[0].title == "商品\nТовар, \"one\"", dialect[0].code == "中文" else {
+            throw LabelFailure.message("CSV multilingual dialect preservation failed.")
+        }
+        guard try parseCSV("code,type\n" + String(repeating: "a", count: 4096) + ",text", config: LabelConfig()).count == 1 else {
+            throw LabelFailure.message("CSV 4,096-byte field boundary failed.")
+        }
+        var rejectedRemote = false
+        do { _ = try pdf(LabelConfig(), imported: URL(string: "https://example.invalid/labels.csv")!) }
+        catch let failure as LabelFailure {
+            guard failure.localizedDescription == "Choose a regular local file." else { throw failure }
+            rejectedRemote = true
+        }
+        guard rejectedRemote else { throw LabelFailure.message("Nonlocal import was not rejected.") }
         let csv = root.appendingPathComponent("sample-labels.csv")
         try "title,code,footer,type,quantity\nProduct one,12345678,,code128,2\nProduct two,SKU002,,qr,1\n".write(to: csv, atomically: true, encoding: .utf8)
         let batch = try pdf(LabelConfig(), imported: csv)
@@ -291,6 +358,7 @@ enum LabelRenderer {
         try stockImport.write(to: root.appendingPathComponent("imported-58x40.pdf"))
         report.append(["test": "dense-code-rejected", "passed": true])
         report.append(["test": "CSV quoting and 3-page batch", "passed": true])
+        report.append(["test": "CSV early record/quantity/field/column/byte limits and multilingual dialects", "passed": true])
         report.append(["test": "PDF import", "passed": true])
         let json = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
         try json.write(to: root.appendingPathComponent("self-test.json"))

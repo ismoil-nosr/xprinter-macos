@@ -6,7 +6,7 @@ macOS 14 or later, an Intel or Apple Silicon Mac, an administrator account, an X
 
 ## Unsigned first release
 
-Version 0.2.0 has an **unsigned Installer package** and **ad-hoc-signed executables**. Ad-hoc signatures verify code integrity; they do not identify a developer to Apple. This release is not notarized. macOS may ask you to approve both the downloaded installer and the app.
+Version 0.3.1 has an **unsigned Installer package** and **ad-hoc-signed executables**. Ad-hoc signatures verify code integrity; they do not identify a developer to Apple. This release is not notarized. macOS may ask you to approve both the downloaded installer and the app.
 
 Download only from [this repository's Releases](https://github.com/ismoil-nosr/xprinter-macos/releases). If macOS blocks opening the package, attempt to open it once, then use **System Settings → Privacy & Security → Open Anyway** for that package, authenticate, and open it again. If the app is separately blocked, approve that specific app the same way. Do not disable Gatekeeper, SIP or other system protections. Apple's [instructions for opening an app from an unidentified developer](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) describe the approval process.
 

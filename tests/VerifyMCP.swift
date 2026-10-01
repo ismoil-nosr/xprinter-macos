@@ -55,7 +55,19 @@ for invalid: [String: Any] in [
     let result = try call(invalid, success: false)
     try require(result["error"] is String, "Invalid request must return a JSON error")
 }
-let report: [String: Any] = ["native_mcp_bridge": "passed", "physical_size_mm": [58, 40], "preview_pixels": [464, 320], "chinese_qr": "decoded", "code128": "decoded", "pdf_import": "decoded", "invalid_requests": 5]
+// Keep stdin open: the native process must enforce its own deadline without Node/SSH.
+let stalled = Process(), stalledInput = Pipe(), stalledOutput = Pipe(), stalledErrors = Pipe()
+stalled.executableURL = URL(fileURLWithPath: executable); stalled.arguments = ["--mcp-render"]
+stalled.standardInput = stalledInput; stalled.standardOutput = stalledOutput; stalled.standardError = stalledErrors
+let started = Date()
+try stalled.run()
+DispatchQueue.global().asyncAfter(deadline: .now() + 35) { if stalled.isRunning { stalled.terminate() } }
+stalled.waitUntilExit()
+try stalledInput.fileHandleForWriting.close()
+try require(stalled.terminationReason == .exit && stalled.terminationStatus == 124, "Native renderer deadline was not enforced")
+try require(Date().timeIntervalSince(started) >= 23 && Date().timeIntervalSince(started) < 35, "Native deadline timing changed")
+try require(stalledOutput.fileHandleForReading.readDataToEndOfFile().isEmpty && stalledErrors.fileHandleForReading.readDataToEndOfFile().isEmpty, "Deadline must not emit partial documents or content diagnostics")
+let report: [String: Any] = ["native_mcp_bridge": "passed", "physical_size_mm": [58, 40], "preview_pixels": [464, 320], "chinese_qr": "decoded", "code128": "decoded", "pdf_import": "decoded", "invalid_requests": 5, "independent_deadline_seconds": 25]
 let json = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
 try json.write(to: output.appendingPathComponent("mcp-renderer.json"))
 print(String(data: json, encoding: .utf8)!)

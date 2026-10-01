@@ -24,3 +24,9 @@ Version 0.3.0 adds the headless renderer used by the separate MCP server. Automa
 | Black marks, continuous rolls, different firmware/stock | Command generation tested; no physical compatibility claim for every variant. |
 
 Submit additional reports with model/firmware, macOS version, CPU, USB connection, label dimensions, gap/mark measurements and a non-sensitive sample. Do not upload real customer/order labels or USB serials.
+
+## Security maintenance (0.3.1)
+
+Local checks passed on 2026-10-01: early CSV rejection at record 501 and expanded quantity 501, field-byte/column/input limits, BOM/CRLF/quoted multiline Chinese/Russian data, nonlocal URL rejection, and an independent 25-second native deadline with stdin deliberately left open. Barcode decoding through the CUPS-to-TSPL pipeline, all three translation catalogs and the universal package layout/signatures/permissions also passed. No new physical print was sent.
+
+The app/filter depend on macOS frameworks and system libcups; current system-parser advisories and OS patch state cannot be certified by this repository's checks. CI adds CodeQL and release gates; see the [security policy](../SECURITY.md).

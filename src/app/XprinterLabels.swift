@@ -25,7 +25,8 @@ enum Command {
         process.executableURL = URL(fileURLWithPath: path); process.arguments = arguments
         process.standardOutput = output; process.standardError = errors
         var environment = ProcessInfo.processInfo.environment
-        environment["LC_ALL"] = "C"; process.environment = environment
+        environment["LC_ALL"] = "C"; environment["CUPS_SERVER"] = "/private/var/run/cupsd"
+        process.environment = environment
         process.terminationHandler = { _ in done.signal() }
         try process.run()
         if done.wait(timeout: .now() + timeout) == .timedOut {

@@ -160,7 +160,7 @@ static int print_page(const cups_page_header2_t *h, const Settings *s,
 
 int main(int argc, char **argv) {
     if (argc == 2 && !strcmp(argv[1], "--version")) {
-        puts("Open Xprinter raster filter 0.3.0 (MIT)");
+        puts("Open Xprinter raster filter 0.3.1 (MIT)");
         return 0;
     }
     if (argc != 6 && argc != 7) {
