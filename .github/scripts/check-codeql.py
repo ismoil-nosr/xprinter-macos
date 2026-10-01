@@ -107,7 +107,13 @@ def evaluate(directory, root, today=None):
                 locations = result.get("locations", [])
                 location = locations[0].get("physicalLocation", {}) if len(locations) == 1 else {}
                 uri = location.get("artifactLocation", {}).get("uri")
-                region = location.get("region")
+                raw_region = location.get("region", {})
+                # SARIF omits endLine for a single-line region. GitHub's export
+                # expands it, so compare the same exact span in both formats.
+                region = {"startLine": raw_region.get("startLine"),
+                          "endLine": raw_region.get("endLine", raw_region.get("startLine")),
+                          "startColumn": raw_region.get("startColumn"),
+                          "endColumn": raw_region.get("endColumn")}
                 matches = [e for e in exceptions if e["ruleId"] == rule_id
                            and e["path"] == uri and e["region"] == region]
                 if len(matches) == 1:

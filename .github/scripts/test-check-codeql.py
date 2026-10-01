@@ -124,6 +124,21 @@ class GateTests(unittest.TestCase):
         with self.assertRaises(gate.GateError):
             self.evaluate()
 
+    def test_implicit_single_line_region_matches_exact_span(self):
+        document = self.report(True)
+        self.triage()
+        del document["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["region"]["endLine"]
+        self.save(document)
+        self.assertEqual(self.evaluate()["reviewedFalsePositives"], 1)
+
+    def test_different_end_line_is_not_excepted(self):
+        document = self.report(True)
+        self.triage()
+        document["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["region"] = {
+            **self.region, "endLine": 51}
+        self.save(document)
+        self.assertEqual(self.evaluate()["highOrCriticalFindings"], 1)
+
     def test_expired_exception_fails(self):
         self.report(True)
         self.triage("2026-10-01")
