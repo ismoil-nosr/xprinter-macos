@@ -12,6 +12,8 @@ Version 0.2.0 adds translation coverage and printf argument checks for all three
 
 On the development Mac, the native app was switched through Simplified Chinese, Russian and English. The UI and menu bar changed immediately; status, help and validation messages were checked, while the 58×40 mm size, 2 mm gap and barcode value remained intact. No new hardware print is needed to verify an interface-only change; the physical evidence below concerns the driver baseline.
 
+Version 0.3.0 adds the headless renderer used by the separate MCP server. Automated checks validate 58×40 mm PDF geometry, 464×320 preview pixels at 203 dpi, two-page Chinese QR labels, PDF reimport, Code 128 decoding, streamed input and invalid requests. This change does not alter label alignment or the raster-to-TSPL commands. MCP protocol, OAuth and retry tests live in [xprinter-mcp](https://github.com/ismoil-nosr/xprinter-mcp). No additional physical print is claimed for this integration.
+
 ## Physical validation
 
 | Configuration | Evidence |

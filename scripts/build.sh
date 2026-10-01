@@ -18,7 +18,7 @@ for arch in arm64 x86_64; do
     /usr/bin/xcrun clang -std=c11 -Wall -Wextra -Werror -Wno-deprecated-declarations -O2 \
         -target "$arch-apple-macos14" src/filter/rastertoxp330b.c -lcups -o "$BUILD_DIR/rastertoxp330b-$arch"
     /usr/bin/xcrun swiftc -swift-version 5 -O -target "$arch-apple-macosx14.0" \
-        src/app/Localization.swift src/app/LabelRenderer.swift src/app/XprinterLabels.swift -o "$BUILD_DIR/OpenXprinter-$arch" \
+        src/app/Localization.swift src/app/LabelRenderer.swift src/app/MCPRenderer.swift src/app/XprinterLabels.swift -o "$BUILD_DIR/OpenXprinter-$arch" \
         -framework AppKit -framework SwiftUI -framework CoreImage -framework PDFKit -framework Vision
 done
 /usr/bin/lipo -create "$BUILD_DIR/rastertoxp330b-arm64" "$BUILD_DIR/rastertoxp330b-x86_64" -output "$DRIVER/rastertoxp330b"

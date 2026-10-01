@@ -1,15 +1,14 @@
-Open Xprinter 0.2.0 adds English, Russian and Simplified Chinese to the native macOS label app.
+Open Xprinter 0.3.0 adds a headless label renderer for the separate open-source [MCP server](https://github.com/ismoil-nosr/xprinter-mcp).
 
-- Switch languages instantly from the top-right menu; your choice is remembered for next launch.
-- Translated menus, printer status, setup/print prompts, help and app validation errors. Label content, physical size and printer settings remain unchanged.
-- Localized installer welcome/conclusion pages, complete Chinese usage and contribution guides, a Chinese CSV example, and a translation guide.
-- Tests for all translation keys, format arguments, language fallback, runtime errors and preservation of label content/settings while switching. Chinese QR data is checked after the complete CUPS-to-TSPL pipeline.
-- Universal Intel / Apple Silicon installer, macOS 14+, XP-330B USB / TSPL.
+- AI clients on macOS, Windows and Linux can connect to the Mac printer server through MCP. The optional Node component is installed separately; this driver installer does not open a network port or add Node.
+- The bounded stdin/stdout JSON bridge reuses the native GUI's Code 128, Unicode QR, text and PDF fitting implementation. It returns a physical-size PDF and first-page preview without moving paper or changing preferences.
+- New tests cover physical dimensions, Chinese QR and Code 128 decoding, PDF reimport, streamed input and invalid requests.
+- English, Russian and Simplified Chinese GUI; macOS 14+, universal Intel / Apple Silicon installer; XP-330B USB / TSPL.
 
-**The package remains unsigned by Apple and is not notarized.** Approve this installer and, if needed, the app through macOS Privacy & Security. No system protections need to be disabled. See the [installation instructions](https://github.com/ismoil-nosr/xprinter-macos/blob/main/docs/INSTALL.md).
+**This package remains unsigned by Apple and is not notarized.** Approve it through macOS Privacy & Security as described in the [installation guide](https://github.com/ismoil-nosr/xprinter-macos/blob/main/docs/INSTALL.md). No system protections need to be disabled.
 
-Русский: интерфейс, меню, помощь и ошибки переведены на русский. Выберите «Русский» справа вверху; этикетки и настройки сохранятся. [Инструкция](https://github.com/ismoil-nosr/xprinter-macos/blob/main/docs/README.ru.md).
+Русский: добавлен генератор этикеток для отдельного [MCP-сервера](https://github.com/ismoil-nosr/xprinter-mcp). Обычная печать и интерфейс на трёх языках сохраняются; MCP устанавливается отдельно.
 
-简体中文：应用界面、菜单、帮助和错误提示已支持中文。右上角选择“简体中文”即可即时切换，标签内容和打印参数保持不变。欢迎用中文提交 Issue 或 Pull Request。[中文使用指南](https://github.com/ismoil-nosr/xprinter-macos/blob/main/docs/README.zh-CN.md) · [中文贡献指南](https://github.com/ismoil-nosr/xprinter-macos/blob/main/docs/CONTRIBUTING.zh-CN.md)。
+简体中文：新增用于独立 [MCP 服务器](https://github.com/ismoil-nosr/xprinter-mcp) 的无界面标签生成接口。普通打印和三语言界面保持不变；MCP 为单独安装的可选组件。
 
-Match the loaded label size and gap, then print and scan one label before a batch. Hardware coverage is recorded in [VALIDATION.md](https://github.com/ismoil-nosr/xprinter-macos/blob/main/docs/VALIDATION.md).
+The driver baseline was physically confirmed on 58×40 mm gap stock. This release's integration checks do not claim an additional physical print or universal firmware compatibility. See [validation](https://github.com/ismoil-nosr/xprinter-macos/blob/main/docs/VALIDATION.md).

@@ -55,6 +55,12 @@ title,code,footer,type,quantity
 
 如果问题仍存在，可[用中文提交 Issue](https://github.com/ismoil-nosr/xprinter-macos/issues)。请提供型号、固件（如已知）、macOS 版本、CPU、纸张尺寸、间隙 / 黑标高度和不含个人信息的样例。不要公开 USB 序列号、客户订单或密码。
 
+## AI 与 MCP
+
+独立开源的 [MCP 服务器](https://github.com/ismoil-nosr/xprinter-mcp) 支持 macOS、Windows 和 Linux 上的 AI 客户端通过统一的 MCP API 准备标签、查看预览、打印并检查自己的任务。本地使用 stdio，远程使用 SSH 或经过身份验证的 HTTPS。USB 后端运行在连接打印机的 Mac 上。
+
+服务器 Mac 需要 Open Xprinter **0.3.0+** 和 Node 24+。MCP 是单独安装的可选组件；普通驱动安装包不会开启网络端口，也不需要 Node。[中文 MCP 指南](https://github.com/ismoil-nosr/xprinter-mcp/blob/main/docs/README.zh-CN.md)。
+
 ## 支持范围
 
 | 项目 | 支持情况 |

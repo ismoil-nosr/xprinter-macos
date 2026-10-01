@@ -480,6 +480,9 @@ struct LabelsView: View {
 
 @main struct Main {
     @MainActor static func main() {
+        if CommandLine.arguments.contains("--mcp-render") {
+            exit(MCPRenderer.run())
+        }
         if CommandLine.arguments.contains("--self-test") {
             Localization.configure(.english)
             do {

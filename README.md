@@ -48,6 +48,12 @@ macOS sends a PDF through a raster driver. A PDF's orientation, a printer's pape
 
 Wrong roll dimensions, a dirty/misaligned sensor, receipt mode or inaccurate gap settings still require correction; software cannot infer every roll from USB identification alone. See [troubleshooting](docs/TROUBLESHOOTING.md).
 
+## AI / MCP access
+
+The optional [Open Xprinter MCP server](https://github.com/ismoil-nosr/xprinter-mcp) lives in its own repository. AI clients on macOS, Windows and Linux can prepare labels, review a preview, submit prints and check their jobs using the same MCP API. Local clients use stdio; remote clients use SSH or an authenticated HTTPS endpoint. The USB backend runs on the Mac with the printer connected.
+
+Open Xprinter **0.3.0+** provides a bounded headless renderer shared with the GUI. It only creates PDFs/previews; the MCP component owns authorization and print submission. MCP is optional and requires Node 24+ on the server Mac. Installing this `.pkg` alone does not open a network port or require Node. See the [renderer contract](docs/MCP-RENDERER.md).
+
 ## Build and test
 
 On macOS with Xcode or its Command Line Tools and Python 3 for building:

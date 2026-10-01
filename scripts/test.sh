@@ -9,6 +9,7 @@ APP='build/stage/Applications/Open Xprinter.app/Contents/MacOS/OpenXprinter'
 python3 tests/test_localization.py
 "$APP" --self-test-localization > build/tests/localization.log
 "$APP" --self-test "$PROJECT_DIR/build/tests" > build/tests/renderer.log
+/usr/bin/xcrun swift tests/VerifyMCP.swift "$PROJECT_DIR/$APP" "$PROJECT_DIR/build/tests"
 /usr/bin/xcrun clang -std=c11 -Wall -Wextra -Werror -Wno-deprecated-declarations tests/make-raster.c -lcups -o build/make-raster
 python3 tests/test_filter.py
 /usr/bin/xcrun swiftc -parse-as-library tests/VerifyTSPL.swift -o build/verify-tspl -framework Vision -framework CoreGraphics
