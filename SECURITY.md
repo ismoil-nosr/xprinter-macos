@@ -9,7 +9,7 @@ Open Xprinter is a normal-user macOS app and render-only command-line bridge, pl
 - CSV import reads at most 4 MiB, retains one field/row at a time, caps fields at 4,096 UTF-8 bytes and rows at 16 columns, and stops immediately above 500 expanded labels. Quoted commas/newlines, escaped quotes, CRLF, BOM and multilingual text remain supported.
 - CUPS filter validates resolution, geometry, stride, pixel formats, copies and page count before owned allocation. It buffers complete pages and emits fixed numeric/enum TSPL with exact bitmap framing.
 - Temporary documents use unique private directories. The headless bridge has bounded stdin/PDF/page/pixel/output sizes and an independent 25-second deadline, including while waiting for stdin. It never installs a driver, changes preferences or submits a job.
-- CI runs native regression/package checks and CodeQL for C, Swift, Python and workflows. High/critical CodeQL findings block releases. PR dependency review and weekly Dependabot action updates complement weekly CodeQL scans. Actions are commit-pinned and checkout credentials are not persisted.
+- CI runs native regression/package checks and CodeQL for the production C/Swift code, Python and workflows. High/critical CodeQL findings block releases. The gate tests both SARIF driver and extension rule metadata and fails on unresolved rules. Any future false-positive exception must identify an exact location, expire and bind reviewed source hashes. PR dependency review and weekly Dependabot action updates complement weekly CodeQL scans. Actions are commit-pinned and checkout credentials are not persisted.
 
 ## Dependencies and limits
 
