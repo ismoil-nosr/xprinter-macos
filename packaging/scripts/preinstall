@@ -1,0 +1,14 @@
+#!/bin/bash
+# SPDX-License-Identifier: MIT
+set -Eeuo pipefail
+[[ "${3:-/}" == / ]] || { printf '%s\n' 'Install Open Xprinter on the running startup disk.' >&2; exit 1; }
+FILTER=/usr/libexec/cups/filter/rastertoxp330b
+if [[ -e "$FILTER" || -L "$FILTER" ]]; then
+    [[ "$(/bin/readlink "$FILTER" 2>/dev/null || true)" == /Library/Printers/OpenXprinter/rastertoxp330b ]] || { printf '%s\n' 'Another driver owns rastertoxp330b. Installation stopped without replacing it.' >&2; exit 1; }
+fi
+APP='/Applications/Open Xprinter.app'
+if [[ -e "$APP" ]]; then
+    [[ ! -L "$APP" && -f "$APP/Contents/Info.plist" ]] || exit 1
+    [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist")" == com.ismoilnosr.openxprinter ]] || { printf '%s\n' 'An unrelated app occupies /Applications/Open Xprinter.app.' >&2; exit 1; }
+fi
+[[ ! -L /Library/Printers/OpenXprinter ]] || { printf '%s\n' 'The driver directory must not be a symbolic link.' >&2; exit 1; }

@@ -1,0 +1,11 @@
+#!/bin/bash
+# SPDX-License-Identifier: MIT
+set -Eeuo pipefail
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin LC_ALL=C
+/usr/bin/codesign --verify --strict /Library/Printers/OpenXprinter/rastertoxp330b
+/usr/bin/codesign --verify --deep --strict '/Applications/Open Xprinter.app'
+/usr/bin/cupstestppd -W all /Library/Printers/OpenXprinter/Open-Xprinter-XP330B.ppd
+# Printer disconnection, USB discovery and queue setup must not break an app installation.
+if ! /Library/Printers/OpenXprinter/setup-printer.sh --auto; then
+    printf '%s\n' 'Driver installed. Open Open Xprinter and click Set up printer to finish configuration.'
+fi

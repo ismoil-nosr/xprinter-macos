@@ -1,0 +1,154 @@
+*PPD-Adobe: "4.3"
+*% SPDX-License-Identifier: MIT
+*% Copyright (c) 2026 Ismoil Nosr
+*FormatVersion: "4.3"
+*FileVersion: "0.1.0"
+*LanguageVersion: English
+*LanguageEncoding: ISOLatin1
+*PCFileName: "XP330BOS.PPD"
+*Manufacturer: "Open Xprinter"
+*Product: "(XP-330B)"
+*ModelName: "Open Xprinter XP-330B"
+*ShortNickName: "XP-330B Open Source"
+*NickName: "Xprinter XP-330B Labels (Open Source)"
+*ColorDevice: False
+*DefaultColorSpace: Gray
+*FileSystem: False
+*LanguageLevel: "3"
+*PSVersion: "(3010.000) 0"
+*Throughput: "1"
+*LandscapeOrientation: Plus90
+*cupsVersion: 2.0
+*cupsManualCopies: False
+*cupsMaxCopies: 100
+*cupsFilter: "application/vnd.cups-raster 0 rastertoxp330b"
+*OpenUI *Resolution/Resolution: PickOne
+*OrderDependency: 10 AnySetup *Resolution
+*DefaultResolution: 203dpi
+*Resolution 203dpi/203 dpi: "<</HWResolution[203 203]>>setpagedevice"
+*CloseUI: *Resolution
+*OpenUI *ColorModel/Color mode: PickOne
+*OrderDependency: 10 AnySetup *ColorModel
+*DefaultColorModel: Gray
+*ColorModel Gray/Black and white: "<</cupsColorSpace 3/cupsColorOrder 0/cupsBitsPerColor 8>>setpagedevice"
+*CloseUI: *ColorModel
+*OpenUI *PageSize/Label size: PickOne
+*OrderDependency: 20 AnySetup *PageSize
+*DefaultPageSize: 40x58mmRotated.Fullbleed
+*PageSize 20x30mmRotated.Fullbleed/30 x 20 mm: "<</PageSize[85.03937 56.69291]/ImagingBBox null>>setpagedevice"
+*PageSize 30x40mmRotated.Fullbleed/40 x 30 mm: "<</PageSize[113.38583 85.03937]/ImagingBBox null>>setpagedevice"
+*PageSize 30x50mmRotated.Fullbleed/50 x 30 mm: "<</PageSize[141.73228 85.03937]/ImagingBBox null>>setpagedevice"
+*PageSize 50x50mm.Fullbleed/50 x 50 mm: "<</PageSize[141.73228 141.73228]/ImagingBBox null>>setpagedevice"
+*PageSize 40x58mmRotated.Fullbleed/58 x 40 mm: "<</PageSize[164.40945 113.38583]/ImagingBBox null>>setpagedevice"
+*PageSize 40x60mmRotated.Fullbleed/60 x 40 mm: "<</PageSize[170.07874 113.38583]/ImagingBBox null>>setpagedevice"
+*PageSize 50x70mmRotated.Fullbleed/70 x 50 mm: "<</PageSize[198.42520 141.73228]/ImagingBBox null>>setpagedevice"
+*PageSize 50x76mmRotated.Fullbleed/76 x 50 mm: "<</PageSize[215.43307 141.73228]/ImagingBBox null>>setpagedevice"
+*PageSize 58x100mm.Fullbleed/58 x 100 mm: "<</PageSize[164.40945 283.46457]/ImagingBBox null>>setpagedevice"
+*PageSize 76x150mm.Fullbleed/76 x 150 mm: "<</PageSize[215.43307 425.19685]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageSize
+*OpenUI *PageRegion/Label size: PickOne
+*OrderDependency: 20 AnySetup *PageRegion
+*DefaultPageRegion: 40x58mmRotated.Fullbleed
+*PageRegion 20x30mmRotated.Fullbleed/30 x 20 mm: "<</PageSize[85.03937 56.69291]/ImagingBBox null>>setpagedevice"
+*PageRegion 30x40mmRotated.Fullbleed/40 x 30 mm: "<</PageSize[113.38583 85.03937]/ImagingBBox null>>setpagedevice"
+*PageRegion 30x50mmRotated.Fullbleed/50 x 30 mm: "<</PageSize[141.73228 85.03937]/ImagingBBox null>>setpagedevice"
+*PageRegion 50x50mm.Fullbleed/50 x 50 mm: "<</PageSize[141.73228 141.73228]/ImagingBBox null>>setpagedevice"
+*PageRegion 40x58mmRotated.Fullbleed/58 x 40 mm: "<</PageSize[164.40945 113.38583]/ImagingBBox null>>setpagedevice"
+*PageRegion 40x60mmRotated.Fullbleed/60 x 40 mm: "<</PageSize[170.07874 113.38583]/ImagingBBox null>>setpagedevice"
+*PageRegion 50x70mmRotated.Fullbleed/70 x 50 mm: "<</PageSize[198.42520 141.73228]/ImagingBBox null>>setpagedevice"
+*PageRegion 50x76mmRotated.Fullbleed/76 x 50 mm: "<</PageSize[215.43307 141.73228]/ImagingBBox null>>setpagedevice"
+*PageRegion 58x100mm.Fullbleed/58 x 100 mm: "<</PageSize[164.40945 283.46457]/ImagingBBox null>>setpagedevice"
+*PageRegion 76x150mm.Fullbleed/76 x 150 mm: "<</PageSize[215.43307 425.19685]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageRegion
+*DefaultImageableArea: 40x58mmRotated.Fullbleed
+*DefaultPaperDimension: 40x58mmRotated.Fullbleed
+*ImageableArea 20x30mmRotated.Fullbleed: "0 0 85.03937 56.69291"
+*PaperDimension 20x30mmRotated.Fullbleed: "85.03937 56.69291"
+*ImageableArea 30x40mmRotated.Fullbleed: "0 0 113.38583 85.03937"
+*PaperDimension 30x40mmRotated.Fullbleed: "113.38583 85.03937"
+*ImageableArea 30x50mmRotated.Fullbleed: "0 0 141.73228 85.03937"
+*PaperDimension 30x50mmRotated.Fullbleed: "141.73228 85.03937"
+*ImageableArea 50x50mm.Fullbleed: "0 0 141.73228 141.73228"
+*PaperDimension 50x50mm.Fullbleed: "141.73228 141.73228"
+*ImageableArea 40x58mmRotated.Fullbleed: "0 0 164.40945 113.38583"
+*PaperDimension 40x58mmRotated.Fullbleed: "164.40945 113.38583"
+*ImageableArea 40x60mmRotated.Fullbleed: "0 0 170.07874 113.38583"
+*PaperDimension 40x60mmRotated.Fullbleed: "170.07874 113.38583"
+*ImageableArea 50x70mmRotated.Fullbleed: "0 0 198.42520 141.73228"
+*PaperDimension 50x70mmRotated.Fullbleed: "198.42520 141.73228"
+*ImageableArea 50x76mmRotated.Fullbleed: "0 0 215.43307 141.73228"
+*PaperDimension 50x76mmRotated.Fullbleed: "215.43307 141.73228"
+*ImageableArea 58x100mm.Fullbleed: "0 0 164.40945 283.46457"
+*PaperDimension 58x100mm.Fullbleed: "164.40945 283.46457"
+*ImageableArea 76x150mm.Fullbleed: "0 0 215.43307 425.19685"
+*PaperDimension 76x150mm.Fullbleed: "215.43307 425.19685"
+*HWMargins: "0 0 0 0"
+*VariablePaperSize: True
+*MaxMediaWidth: "215.43307"
+*MaxMediaHeight: "2834.64567"
+*CustomPageSize True: "pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice"
+*ParamCustomPageSize Width: 1 points 56.69291 215.43307
+*ParamCustomPageSize Height: 2 points 28.34646 2834.64567
+*ParamCustomPageSize WidthOffset: 3 points 0 0
+*ParamCustomPageSize HeightOffset: 4 points 0 0
+*ParamCustomPageSize Orientation: 5 int 0 0
+*OpenUI *PaperType/Loaded stock: PickOne
+*OrderDependency: 30 AnySetup *PaperType
+*DefaultPaperType: LabelGaps
+*PaperType LabelGaps/Labels with gaps: ""
+*PaperType LabelMark/Black mark labels: ""
+*PaperType Continue/Continuous roll: ""
+*CloseUI: *PaperType
+*OpenUI *GapsHeight/Gap or black mark height: PickOne
+*OrderDependency: 30 AnySetup *GapsHeight
+*DefaultGapsHeight: 2
+*GapsHeight 0/0 mm: ""
+*GapsHeight 1/1 mm: ""
+*GapsHeight 2/2 mm: ""
+*GapsHeight 3/3 mm: ""
+*GapsHeight 4/4 mm: ""
+*GapsHeight 5/5 mm: ""
+*GapsHeight 6/6 mm: ""
+*GapsHeight 7/7 mm: ""
+*GapsHeight 8/8 mm: ""
+*GapsHeight 9/9 mm: ""
+*GapsHeight 10/10 mm: ""
+*CloseUI: *GapsHeight
+*OpenUI *Darkness/Darkness: PickOne
+*OrderDependency: 30 AnySetup *Darkness
+*DefaultDarkness: 7
+*Darkness 0/0: ""
+*Darkness 1/1: ""
+*Darkness 2/2: ""
+*Darkness 3/3: ""
+*Darkness 4/4: ""
+*Darkness 5/5: ""
+*Darkness 6/6: ""
+*Darkness 7/7: ""
+*Darkness 8/8: ""
+*Darkness 9/9: ""
+*Darkness 10/10: ""
+*Darkness 11/11: ""
+*Darkness 12/12: ""
+*Darkness 13/13: ""
+*Darkness 14/14: ""
+*Darkness 15/15: ""
+*CloseUI: *Darkness
+*OpenUI *PrintSpeed/Print speed: PickOne
+*OrderDependency: 30 AnySetup *PrintSpeed
+*DefaultPrintSpeed: 3
+*PrintSpeed 2/2 inches per second: ""
+*PrintSpeed 3/3 inches per second: ""
+*PrintSpeed 4/4 inches per second: ""
+*CloseUI: *PrintSpeed
+*OpenUI *MediaMethod/Printing method: PickOne
+*OrderDependency: 30 AnySetup *MediaMethod
+*DefaultMediaMethod: Direct
+*MediaMethod Direct/Direct thermal: ""
+*CloseUI: *MediaMethod
+*OpenUI *Collate/Collate: Boolean
+*OrderDependency: 10 AnySetup *Collate
+*DefaultCollate: False
+*Collate True/Yes: "<</Collate true>>setpagedevice"
+*Collate False/No: "<</Collate false>>setpagedevice"
+*CloseUI: *Collate

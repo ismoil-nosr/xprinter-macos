@@ -1,0 +1,29 @@
+name: Printing or installation problem
+description: Report a reproducible XP-330B problem without private label data.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Open Xprinter version
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: macOS version and CPU (Apple Silicon / Intel)
+    validations:
+      required: true
+  - type: input
+    id: stock
+    attributes:
+      label: Label width × feed height, gap/mark size and stock type
+      description: Measure the label and the gap separately. Include firmware if known.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Expected result, actual result and steps to reproduce
+      description: Use a synthetic label. Do not post customer labels, serial numbers, account details or passwords.
+    validations:
+      required: true

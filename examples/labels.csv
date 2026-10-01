@@ -1,0 +1,4 @@
+title,code,footer,type,quantity
+Sample product,12345678,25000 UZS,code128,2
+QR sample,https://example.com/item/42,Scan me,qr,1
+Товар,SAMPLE-003,Тестовая этикетка,qr,1

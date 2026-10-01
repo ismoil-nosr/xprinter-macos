@@ -1,0 +1,57 @@
+name: Build, test and package
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15-intel, macos-26]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Validate release version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
+      - name: Build universal installer
+        run: ./scripts/build.sh
+      - name: Test rendering, driver, setup and package
+        run: ./scripts/test.sh
+      - name: Fresh Mac installation without USB and reinstall
+        run: ./tests/test_installation.sh
+      - name: Upload package and validation reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: Open-Xprinter-${{ matrix.os }}
+          path: |
+            dist/*.pkg
+            build/tests/*.json
+          if-no-files-found: error
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: Open-Xprinter-macos-26
+          path: release-artifacts
+      - name: Publish unsigned release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd release-artifacts/dist
+          sha256sum *.pkg > SHA256SUMS.txt
+          gh release create "$GITHUB_REF_NAME" *.pkg SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" --title "Open Xprinter $GITHUB_REF_NAME" \
+            --notes-file "$GITHUB_WORKSPACE/docs/RELEASE-NOTES.md"
