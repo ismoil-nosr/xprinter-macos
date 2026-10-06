@@ -28,7 +28,7 @@
 "Continuous / receipt" = "连续纸 / 小票纸";
 "Gap / mark: %d mm" = "间隙 / 黑标：%d 毫米";
 "Align label start…" = "对齐标签起点…";
-"Feed to the start of the next label. The driver also aligns automatically before each job." = "进纸到下一张标签的起点。驱动也会在每个打印任务前自动对齐。";
+"Align after loading a roll or if printing crosses a gap. May consume one blank label; normal jobs do not repeat this feed." = "装入标签纸后，或打印跨越间隙时对齐。可能消耗一张空白标签；正常任务不会重复此进纸操作。";
 "Save as default for other apps…" = "保存为其他应用的默认设置…";
 "2. Create or open labels" = "2. 创建或打开标签";
 "Label pages: %d. Matching PDF sizes are preserved; larger pages are fitted." = "标签页数：%d。尺寸匹配的 PDF 保持原尺寸；较大的页面会缩放以适应标签。";
@@ -94,7 +94,7 @@
 "USB printer configured. Choose the label size loaded in your printer." = "USB 打印机已设置。请选择打印机中装入的标签尺寸。";
 "Set a positive gap or mark height first." = "请先将间隙或黑标高度设置为大于零。";
 "Align the %@ × %@ mm roll?" = "是否对齐 %@ × %@ 毫米的标签纸？";
-"Load the roll and close the cover. The printer will feed to the start of the next label. This also happens automatically before each print job." = "请装入标签纸并合上盖子。打印机会进纸到下一张标签的起点。每次打印任务前也会自动执行此操作。";
+"Use this after loading a roll or if printing starts across a gap. It feeds to the next label and may consume one blank label. Normal print jobs keep the current label position." = "装入标签纸后，或打印内容跨越间隙时使用。此操作会进纸到下一张标签，可能消耗一张空白标签。正常打印任务会保留当前标签位置。";
 "Align" = "对齐";
 "Wait for the current print jobs to finish, then align the label start." = "请等待当前打印任务完成，然后对齐标签起点。";
 "Alignment sent. Wait for the roll to stop, then print one label. %@" = "对齐命令已发送。请等待标签纸停止移动，然后打印一张标签。%@";

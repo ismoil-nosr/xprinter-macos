@@ -221,7 +221,7 @@ enum Command {
         let alert = NSAlert()
         guard gap > 0 else { error = L("Set a positive gap or mark height first."); return }
         alert.messageText = LF("Align the %@ × %@ mm roll?", Localization.number(width), Localization.number(height))
-        alert.informativeText = L("Load the roll and close the cover. The printer will feed to the start of the next label. This also happens automatically before each print job.")
+        alert.informativeText = L("Use this after loading a roll or if printing starts across a gap. It feeds to the next label and may consume one blank label. Normal print jobs keep the current label position.")
         alert.addButton(withTitle: L("Align")); alert.addButton(withTitle: L("Cancel"))
         guard alert.runModal() == .alertFirstButtonReturn else { return }
         let mode = paper == "Black mark labels" ? "BLINE \(gap) mm,0 mm" : "GAP \(gap) mm,0 mm"
@@ -356,7 +356,7 @@ struct LabelsView: View {
                         if model.paper != "Continuous / receipt" {
                             Button(L("Align label start…")) { model.calibrate() }
                                 .disabled(!model.ready || model.working)
-                                .help(L("Feed to the start of the next label. The driver also aligns automatically before each job."))
+                                .help(L("Align after loading a roll or if printing crosses a gap. May consume one blank label; normal jobs do not repeat this feed."))
                         }
                         Button(L("Save as default for other apps…")) { model.repair(applyDefaults: true) }.disabled(model.working || model.devices.isEmpty)
                         Divider()

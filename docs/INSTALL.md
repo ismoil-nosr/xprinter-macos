@@ -35,6 +35,6 @@ For a PDF/image with the wrong orientation, open it in Open Xprinter, select you
 
 ## Changing USB ports or rolls
 
-If the app reports that the port changed or the queue is paused, click **Install / repair USB driver** in its settings. Repairs reconnect only this project's queue and retain its saved media defaults. When changing rolls, update the size and gap/mark setting and save the new defaults. **Align label start** feeds to the next label origin; the driver performs this automatically before each gap/mark print job.
+If the app reports that the port changed or the queue is paused, click **Install / repair USB driver** in its settings. Repairs reconnect only this project's queue and retain its saved media defaults. When changing rolls, update the size and gap/mark setting and save the new defaults. **Align label start** feeds to the next label origin and may consume one blank label. Use it after changing the roll or when printing crosses a gap. Normal jobs preserve the current position and do not repeat this feed.
 
 See [troubleshooting](TROUBLESHOOTING.md) if the first label is still wrong.

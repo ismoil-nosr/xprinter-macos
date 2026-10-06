@@ -13,8 +13,8 @@
       "expires": "2026-12-30",
       "reason": "CUPS documented filter ABI supplies the optional job spool filename in argv[6]; submitted options or raster bytes cannot select it. The installed filter is not setuid and scheduled filters run as an unprivileged OS account. Direct callers access files only with their own rights. Read-only O_NOFOLLOW/O_NONBLOCK plus fstat rejects symlinks and nonregular named inputs; stdin still accepts the normal CUPS pipeline. Regression tests verify rejection without output/hang and byte-equivalence of file/stdin jobs. Build/package tests verify the executable layout and permissions.",
       "files": {
-        "src/filter/rastertoxp330b.c": "a83655443e0b16f0fc56f40f0f1df1468e95a5d0b674bfa8bd20046a6d93cc58",
-        "tests/test_filter.py": "8daeb15bedaf4a8066daafe283a0fef4302ed52ffa595dedb300c9305eb2cb63",
+        "src/filter/rastertoxp330b.c": "ab1d5056fef3e1aa3670058bb91fcdd104a23f006851283e7780be2d074930cb",
+        "tests/test_filter.py": "06afe89a65d3116d1bf3c2e2d44e681dd798cff4ec240d578d28673407240b11",
         "scripts/build.sh": "4b2eeb2d89fbdcd741c52347e605c4f9a550c17ad3bc497c4fb56f0bc1a02df9"
       }
     }

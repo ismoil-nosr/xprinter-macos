@@ -8,7 +8,7 @@
 
 The filter validates raster sizes, resolution, color layout, stride and copies before allocation. Each page is buffered before its commands are sent, so an incomplete page cannot leave the printer waiting for a partial bitmap. It accepts chunked 1/8-bit gray or black and 24-bit RGB/sRGB, rejects unsupported layouts, limits a bitmap to 609×7993 dots and a row to 4096 bytes, and supports cancellation and output errors. Blank padding bits remain white. If a later page is malformed, earlier complete pages may already have printed; inspect the queue before retrying a partial job.
 
-The TSPL sequence is SIZE, GAP/BLINE, reference/direction, speed/darkness, direct thermal and tear-off settings, HOME (only for the first gap/mark page), CLS, BITMAP mode 0 and PRINT. Raster header NumCopies wins over command-line copies to avoid multiplying RIP-expanded copies. The printer may consume one blank label when finding its origin. This release deliberately omits unverified GAPDETECT/BLINEDETECT commands.
+The TSPL sequence is SIZE, GAP/BLINE, reference/direction, speed/darkness, direct thermal and tear-off settings, CLS, BITMAP mode 0 and PRINT. Normal jobs never insert HOME, FEED, FORMFEED or BACKFEED: PRINT handles normal media positioning, while HOME before every job can skip an already-aligned blank label. The app sends HOME only through the explicit Align label start action, after SIZE/GAP and with no pending jobs; that action may consume one blank label. Raster header NumCopies wins over command-line copies to avoid multiplying RIP-expanded copies. This release deliberately omits unverified GAPDETECT/BLINEDETECT commands. See the [TSPL/TSPL2 manual, HOME and PRINT](https://fs.tscprinters.com/system/files/31-0000001-00_tspl_tspl2_programming_3_0.pdf).
 
 The Swift app uses native AppKit, SwiftUI, Core Image, PDFKit and Vision. Files and printing stay local; there is no telemetry or updater. The setup helper installed by the package is root-owned; the app uses a normal macOS authorization dialog to invoke its fixed path. It does not execute an administrator script from a downloaded/user-writable app bundle. External commands receive argument arrays or strictly quoted, validated setup arguments; the app never stores administrator passwords.
 
@@ -33,7 +33,7 @@ APPLICATION_SIGNING_IDENTITY='Developer ID Application: Your Name (TEAMID)' \
 INSTALLER_SIGNING_IDENTITY='Developer ID Installer: Your Name (TEAMID)' \
 ./scripts/build.sh
 ./scripts/test.sh
-./scripts/notarize.sh dist/Open-Xprinter-0.3.1-universal-signed.pkg YOUR_KEYCHAIN_PROFILE
+./scripts/notarize.sh dist/Open-Xprinter-0.3.2-universal-signed.pkg YOUR_KEYCHAIN_PROFILE
 ```
 
 Configure the profile with Apple's `notarytool store-credentials` interactively according to [Apple's notarization guide](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution). The notarization helper submits the signed package, staples the result and assesses it. A successful build alone does not establish successful notarization.

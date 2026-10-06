@@ -28,7 +28,7 @@
 "Continuous / receipt" = "Непрерывная бумага / чек";
 "Gap / mark: %d mm" = "Зазор / метка: %d мм";
 "Align label start…" = "Выровнять начало этикетки…";
-"Feed to the start of the next label. The driver also aligns automatically before each job." = "Подать бумагу до начала следующей этикетки. Драйвер также выравнивает её перед каждым заданием.";
+"Align after loading a roll or if printing crosses a gap. May consume one blank label; normal jobs do not repeat this feed." = "Выровнять после загрузки рулона или если печать пересекает зазор. Может пропустить одну пустую этикетку; обычные задания не повторяют эту протяжку.";
 "Save as default for other apps…" = "Сохранить для других приложений…";
 "2. Create or open labels" = "2. Создайте или откройте этикетки";
 "Label pages: %d. Matching PDF sizes are preserved; larger pages are fitted." = "Страниц этикеток: %d. Подходящий размер PDF сохраняется; большие страницы подгоняются.";
@@ -94,7 +94,7 @@
 "USB printer configured. Choose the label size loaded in your printer." = "USB-принтер настроен. Выберите размер загруженных этикеток.";
 "Set a positive gap or mark height first." = "Сначала укажите высоту зазора или метки больше нуля.";
 "Align the %@ × %@ mm roll?" = "Выровнять рулон %@ × %@ мм?";
-"Load the roll and close the cover. The printer will feed to the start of the next label. This also happens automatically before each print job." = "Загрузите рулон и закройте крышку. Принтер подаст бумагу до начала следующей этикетки. Это также происходит автоматически перед каждым заданием печати.";
+"Use this after loading a roll or if printing starts across a gap. It feeds to the next label and may consume one blank label. Normal print jobs keep the current label position." = "Используйте после загрузки рулона или если печать пересекает зазор. Принтер подаст бумагу до следующей этикетки и может пропустить одну пустую. Обычная печать сохраняет текущую позицию.";
 "Align" = "Выровнять";
 "Wait for the current print jobs to finish, then align the label start." = "Дождитесь завершения текущих заданий, затем выровняйте начало этикетки.";
 "Alignment sent. Wait for the roll to stop, then print one label. %@" = "Команда выравнивания отправлена. Дождитесь остановки рулона и напечатайте одну этикетку. %@";

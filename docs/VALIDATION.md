@@ -4,7 +4,7 @@ Initial development: October 2026. Hardware evidence is separate from tests that
 
 ## Automated checks
 
-`scripts/test.sh` exercises native CUPS raster fixtures across supported color modes and row padding, label origin alignment, continuous/mark commands, NumCopies, multiple pages, stdin/file equivalence, invalid settings, malformed streams and maximum bounds. It rasterizes generated PDFs through Apple's CUPS PDF pipeline and decodes Code 128, QR and Unicode QR from the final TSPL bitmap with Vision. Installer contents are expanded and checked for both CPU slices, signatures, permissions, resources and paths.
+`scripts/test.sh` exercises native CUPS raster fixtures across supported color modes and row padding, absence of extra feeds across separate and multi-page jobs, continuous/mark commands, NumCopies, multiple pages, stdin/file equivalence, invalid settings, malformed streams and maximum bounds. It rasterizes generated PDFs through Apple's CUPS PDF pipeline and decodes Code 128, QR and Unicode QR from the final TSPL bitmap with Vision. Installer contents are expanded and checked for both CPU slices, signatures, permissions, resources and paths.
 
 GitHub Actions runs builds and these tests on macOS 14 Apple Silicon, macOS 15 Intel and macOS 26 Apple Silicon. It then installs and reinstalls the package on the runner with no USB printer, verifies installed files/permissions and removes only the project's installation. The workflow status is the authority for a given commit; a configured workflow is not evidence that it has passed.
 
@@ -32,3 +32,7 @@ Local checks passed on 2026-10-01: early CSV rejection at record 501 and expande
 Named CUPS raster inputs reject symlinks, FIFOs without writers, directories and devices without printer output or blocking. Normal file/stdin raster jobs still produce identical bytes. Security gate regressions cover SARIF driver/extension rules, high/critical thresholds, unresolved metadata, exact reviewed locations and invalidated/expired source-bound triage.
 
 The app/filter depend on macOS frameworks and system libcups; current system-parser advisories and OS patch state cannot be certified by this repository's checks. CI adds CodeQL and release gates; see the [security policy](../SECURITY.md).
+
+## Blank-label feed correction (0.3.2)
+
+On 2026-10-06 the operator reported a blank label skipped before each separate Chrome job on the historical `XP330B_USB` queue, while 58×40 mm geometry and printed artwork remained correct. Inspection found automatic HOME insertion in both that queue's wrapper and the open source filter. Version 0.3.2 removes automatic HOME from normal printing and retains the app's explicit alignment operation. Automated checks cover successive independent jobs, multi-page jobs and unchanged barcode/QR decoding. Physical confirmation of successive jobs is still pending; earlier one-label confirmations do not prove this behavior.

@@ -142,7 +142,7 @@ static double dimension(float points, unsigned dots) {
 }
 
 static int print_page(const cups_page_header2_t *h, const Settings *s,
-                      const unsigned char *bitmap, unsigned stride, int first) {
+                      const unsigned char *bitmap, unsigned stride) {
     unsigned copies = h->NumCopies ? h->NumCopies : (unsigned)s->job_copies;
     double width = dimension(h->cupsPageSize[0], h->cupsWidth);
     double height = dimension(h->cupsPageSize[1], h->cupsHeight);
@@ -150,8 +150,8 @@ static int print_page(const cups_page_header2_t *h, const Settings *s,
                "REFERENCE 0,0\r\nDIRECTION 0,0\r\nSPEED %d\r\nDENSITY %d\r\n"
                "SET RIBBON OFF\r\nOFFSET 0 mm\r\nSET TEAR ON\r\nSET PEEL OFF\r\nSET CUTTER OFF\r\n",
                width, height, s->stock, s->gap, s->speed, s->darkness) < 0) return 0;
-    /* SIZE and GAP/BLINE must precede HOME. Align once per job, never receipt stock. */
-    if (first && s->gap > 0 && fputs("HOME\r\n", stdout) == EOF) return 0;
+    /* PRINT handles normal media positioning. HOME here would advance an
+     * already-aligned blank label on every new job. Align explicitly in the app. */
     if (printf("CLS\r\nBITMAP 0,0,%u,%u,0,", stride, h->cupsHeight) < 0) return 0;
     size_t length = (size_t)stride * h->cupsHeight;
     if (fwrite(bitmap, 1, length, stdout) != length) return 0;
@@ -161,7 +161,7 @@ static int print_page(const cups_page_header2_t *h, const Settings *s,
 
 int main(int argc, char **argv) {
     if (argc == 2 && !strcmp(argv[1], "--version")) {
-        puts("Open Xprinter raster filter 0.3.1 (MIT)");
+        puts("Open Xprinter raster filter 0.3.2 (MIT)");
         return 0;
     }
     if (argc != 6 && argc != 7) {
@@ -223,7 +223,7 @@ int main(int argc, char **argv) {
                     bitmap[(size_t)y * stride + x / 8] &= (unsigned char)~(0x80u >> (x % 8));
         }
         if (!failed && !cancelled) {
-            if (!print_page(&h, &s, bitmap, stride, pages == 1)) {
+            if (!print_page(&h, &s, bitmap, stride)) {
                 fputs("ERROR: Printer output closed or could not be written.\n", stderr); failed = 1;
             } else fprintf(stderr, "PAGE: %d %u\n", pages, h.NumCopies ? h.NumCopies : (unsigned)s.job_copies);
         }

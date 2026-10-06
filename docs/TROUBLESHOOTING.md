@@ -16,7 +16,11 @@ Check these in order:
 4. Close the cover and use **Align label start**; print one label.
 5. If plain FEED from the printer itself does not reliably advance one label, the sensor, roll loading, printer mode or hardware calibration needs attention. Follow the XP-330B manual for your firmware; keep media under the sensor and clean it according to the manufacturer. The app's alignment button is not a replacement for hardware sensor calibration.
 
-The driver emits HOME once per gap/mark job after SIZE and GAP/BLINE. HOME finds the origin; it cannot compensate for incorrect dimensions or a sensor that does not detect the media.
+Normal jobs do not emit HOME. The separate **Align label start** action finds an origin after SIZE and GAP/BLINE; it may consume one blank label and cannot compensate for incorrect dimensions or an unreliable sensor.
+
+## Every separate Chrome job skips one blank label
+
+Version 0.3.2 removes the automatic HOME that older versions sent before each gap/mark job. That feed can advance an already-aligned blank label before printing. Upgrade the driver and keep the correct size and gap; do not run **Align label start** before every job. Verify two separate one-label jobs: both codes should stay on their respective labels with no blank label between them. A historical queue named `XP330B_USB` belongs to the earlier vendor-based setup and is not upgraded by this package; choose **Xprinter XP-330B Labels (Open Source)** to use this driver.
 
 ## Blank, inverted or mirrored output
 

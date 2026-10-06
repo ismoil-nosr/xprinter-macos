@@ -28,7 +28,7 @@
 "Continuous / receipt" = "Continuous / receipt";
 "Gap / mark: %d mm" = "Gap / mark: %d mm";
 "Align label start…" = "Align label start…";
-"Feed to the start of the next label. The driver also aligns automatically before each job." = "Feed to the start of the next label. The driver also aligns automatically before each job.";
+"Align after loading a roll or if printing crosses a gap. May consume one blank label; normal jobs do not repeat this feed." = "Align after loading a roll or if printing crosses a gap. May consume one blank label; normal jobs do not repeat this feed.";
 "Save as default for other apps…" = "Save as default for other apps…";
 "2. Create or open labels" = "2. Create or open labels";
 "Label pages: %d. Matching PDF sizes are preserved; larger pages are fitted." = "Label pages: %d. Matching PDF sizes are preserved; larger pages are fitted.";
@@ -94,7 +94,7 @@
 "USB printer configured. Choose the label size loaded in your printer." = "USB printer configured. Choose the label size loaded in your printer.";
 "Set a positive gap or mark height first." = "Set a positive gap or mark height first.";
 "Align the %@ × %@ mm roll?" = "Align the %@ × %@ mm roll?";
-"Load the roll and close the cover. The printer will feed to the start of the next label. This also happens automatically before each print job." = "Load the roll and close the cover. The printer will feed to the start of the next label. This also happens automatically before each print job.";
+"Use this after loading a roll or if printing starts across a gap. It feeds to the next label and may consume one blank label. Normal print jobs keep the current label position." = "Use this after loading a roll or if printing starts across a gap. It feeds to the next label and may consume one blank label. Normal print jobs keep the current label position.";
 "Align" = "Align";
 "Wait for the current print jobs to finish, then align the label start." = "Wait for the current print jobs to finish, then align the label start.";
 "Alignment sent. Wait for the roll to stop, then print one label. %@" = "Alignment sent. Wait for the roll to stop, then print one label. %@";

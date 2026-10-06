@@ -1,3 +1,11 @@
+# Open Xprinter 0.3.2
+
+- Fix blank-label waste between separate Chrome/Preview jobs: normal gap/mark printing no longer sends HOME before the first bitmap. Label size, gap, raster artwork, copies and tear-off settings are unchanged.
+- Keep **Align label start** as an explicit operation after loading a roll or when a label crosses a gap. Explain its possible one-label feed in English, Russian and Simplified Chinese.
+- Add regressions for two separate single-label jobs and multi-page jobs on gap, mark and continuous stock; retain barcode/QR decoding through the CUPS pipeline.
+- The earlier vendor-based `XP330B_USB` queue needs its own local repair or selection of the open source queue; the installer updates only this project's driver.
+- Hardware confirmation for this feed change is recorded separately in [validation](VALIDATION.md).
+
 # Open Xprinter 0.3.1
 
 - Fix a low-severity CSV import resource-consumption issue (CWE-400): validate records as they arrive instead of allocating all rows before the 500-label limit.

@@ -6,7 +6,7 @@ A native USB label driver and printing app for **Xprinter XP-330B**, with an off
 
 [Download the installer](https://github.com/ismoil-nosr/xprinter-macos/releases/latest) · [Installation](docs/INSTALL.md) · [Русский](docs/README.ru.md) · [简体中文](docs/README.zh-CN.md) · [Report a problem](https://github.com/ismoil-nosr/xprinter-macos/issues)
 
-Print labels from Chrome, Preview and other Mac apps, or use **Open Xprinter** to create barcodes and QR codes, import a PDF/image, and print CSV batches. The driver locates the start of gap/mark labels before each job, preventing a correctly sized label from starting halfway across a gap.
+Print labels from Chrome, Preview and other Mac apps, or use **Open Xprinter** to create barcodes and QR codes, import a PDF/image, and print CSV batches. Normal print jobs keep the current label position without an extra alignment feed. Use **Align label start** after loading a roll or when content crosses a gap.
 
 ## Get started
 
@@ -44,7 +44,7 @@ This is an independent project, not an official Xprinter product. Firmware varia
 
 ## Why labels split across gaps
 
-macOS sends a PDF through a raster driver. A PDF's orientation, a printer's paper size and the physical feed direction must agree. A preview can look correct while the printer is configured to feed 58 mm for a roll whose labels are only 40 mm long. A second problem is starting a job without finding the next label origin. This project uses metric media identifiers that retain the physical dimensions and emits `SIZE`, `GAP`/`BLINE`, then `HOME` before the first bitmap for gap/mark stock. It does not home continuous receipt rolls.
+macOS sends a PDF through a raster driver. A PDF's orientation, a printer's paper size and the physical feed direction must agree. A preview can look correct while the printer is configured to feed 58 mm for a roll whose labels are only 40 mm long. After loading or manually moving the roll, its start position may also need alignment. This project uses metric media identifiers that retain the physical dimensions and emits `SIZE`, `GAP`/`BLINE`, `CLS`, `BITMAP` and `PRINT` without an extra feed before each job. Use **Align label start** once when needed; it sends `HOME` and may consume one blank label. Repeating it before every print would skip a usable label.
 
 Wrong roll dimensions, a dirty/misaligned sensor, receipt mode or inaccurate gap settings still require correction; software cannot infer every roll from USB identification alone. See [troubleshooting](docs/TROUBLESHOOTING.md).
 

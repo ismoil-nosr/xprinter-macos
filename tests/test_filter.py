@@ -62,14 +62,30 @@ class FilterTests(unittest.TestCase):
                             row[x // 8] &= ~(128 >> (x % 8))
                     self.assertEqual(pixels[y * stride:(y + 1) * stride], row)
 
-    def test_home_once_after_size_and_gap_before_bitmap(self):
-        result = run_filter(self.fixture(pages=3))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout.count(b'HOME\r\n'), 1)
-        self.assertEqual(len(bitmaps(result.stdout)), 3)
-        self.assertLess(result.stdout.index(b'SIZE '), result.stdout.index(b'HOME'))
-        self.assertLess(result.stdout.index(b'GAP '), result.stdout.index(b'HOME'))
-        self.assertLess(result.stdout.index(b'HOME'), result.stdout.index(b'CLS'))
+    def test_separate_jobs_do_not_feed_a_blank_label_before_printing(self):
+        # Chrome submits each single-label print as a separate job. A fresh
+        # filter process must not HOME/FEED to a new origin before either job.
+        for stock in ['LabelGaps', 'LabelMark', 'Continue']:
+            for job in range(2):
+                with self.subTest(stock=stock, job=job):
+                    result = run_filter(self.fixture(), f'PaperType={stock}')
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(len(bitmaps(result.stdout)), 1)
+                    self.assertEqual(result.stdout.count(b'PRINT 1,1\r\n'), 1)
+                    header = result.stdout.split(b'BITMAP ', 1)[0]
+                    for command in [b'HOME', b'FEED', b'FORMFEED', b'BACKFEED', b'BACKUP']:
+                        self.assertNotIn(command, header)
+                    self.assertLess(header.index(b'SIZE '), header.index(b'CLS'))
+
+    def test_multi_page_jobs_do_not_insert_alignment_feeds(self):
+        for stock in ['LabelGaps', 'LabelMark', 'Continue']:
+            with self.subTest(stock=stock):
+                result = run_filter(self.fixture(pages=3), f'PaperType={stock}')
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(len(bitmaps(result.stdout)), 3)
+                self.assertEqual(result.stdout.count(b'PRINT 1,1\r\n'), 3)
+                self.assertNotIn(b'HOME\r\n', result.stdout)
+                self.assertNotIn(b'FORMFEED\r\n', result.stdout)
 
     def test_continuous_roll_does_not_home(self):
         result = run_filter(self.fixture(), 'PaperType=Continue GapsHeight=2')
@@ -81,7 +97,7 @@ class FilterTests(unittest.TestCase):
         result = run_filter(self.fixture(), 'PaperType=LabelMark GapsHeight=3')
         self.assertEqual(result.returncode, 0)
         self.assertIn(b'BLINE 3 mm,0 mm', result.stdout)
-        self.assertIn(b'HOME\r\n', result.stdout)
+        self.assertNotIn(b'HOME\r\n', result.stdout)
 
     def test_copies_are_not_multiplied(self):
         result = run_filter(self.fixture(copies=2), copies=2)
@@ -172,7 +188,7 @@ class FilterTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 maps = bitmaps(result.stdout)
                 self.assertEqual(len(maps), pages)
-                self.assertEqual(result.stdout.count(b'HOME\r\n'), 0 if stock == 'Continue' else 1)
+                self.assertNotIn(b'HOME\r\n', result.stdout)
                 self.assertEqual(result.stdout.count(f'PRINT 1,{copies}\r\n'.encode()), pages)
                 for stride, rows, _ in maps:
                     self.assertLessEqual(abs(rows - round(height * 203 / 25.4)), 1)
