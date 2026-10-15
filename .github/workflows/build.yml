@@ -38,7 +38,7 @@ jobs:
       - name: Fresh Mac installation without USB and reinstall
         run: ./tests/test_installation.sh
       - name: Upload package and validation reports
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Open-Xprinter-${{ matrix.os }}
           path: |
@@ -47,7 +47,7 @@ jobs:
           if-no-files-found: error
       - name: Upload failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Diagnostics-${{ matrix.os }}
           path: build/tests/
